@@ -12,6 +12,17 @@ application flow. It started as the app for Blue Ridge Ruby and was rebranded fo
 - Propshaft for assets, Thruster in front of Puma
 - Prawn for the Ruby Embassy passport PDF
 
+## Third-party services (production)
+
+| Service | Used for |
+|---|---|
+| [Railway](https://railway.com) | Hosting, Postgres, deploys |
+| [Postmark](https://postmarkapp.com) | Outbound email (login links) |
+| [Tito](https://ti.to) | Attendee ticketing and login lookup |
+
+None of these are needed for local development. See Environment variables below for the
+credentials each one requires.
+
 ## Development setup
 
 ```bash
@@ -59,8 +70,7 @@ bin/ci     # setup, rubocop, bundler-audit, importmap audit, brakeman, tests, se
 ## Environment variables
 
 Copy `.env.example` to `.env` and fill in what you need (`dotenv-rails` loads it
-automatically in development and test, nothing to source by hand). See
-`LOCAL_DEV_NOTES.md` for exactly which file/line each variable comes from and why.
+automatically in development and test, nothing to source by hand).
 
 | Variable | Dev | Prod |
 |---|---|---|
@@ -86,9 +96,8 @@ The [Rails 8 Railway template](https://railway.com/deploy/railwayrails8starter) 
 separate Postgres services, one each for primary, cache, queue, and cable, and wires the four
 `*_DATABASE_URL` variables to them automatically via Railway variable references. If you deploy
 from that template, those four variables are already set for you and don't need any manual
-configuration. If you provision your own single Postgres instead, point all four at it (each
-connection has its own `migrations_paths`, so they coexist fine in one database), see
-`LOCAL_DEV_NOTES.md` for that reference syntax.
+configuration. If you provision your own single Postgres instead, point all four at it: each
+connection has its own `migrations_paths`, so they coexist fine in one database.
 
 1. Create a Railway project (from the template above, or your own).
 2. Set the remaining required variables above that the template doesn't already provide.

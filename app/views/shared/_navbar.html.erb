@@ -1,10 +1,11 @@
 <nav class="max-w-10xl mx-auto px-8 py-10">
   <div data-controller="toggle" data-toggle-toggle-class="hidden">
     <div class="flex items-center justify-between">
-      <a href="https://blueridgeruby.com" rel="noopener noreferrer" class="flex items-center">
-        <div class="shrink-0 mr-0.5">
-          <%= image_tag "logo.svg", alt: "Blue Ridge Ruby" %>
+      <a href="https://rockymtnruby.dev" rel="noopener noreferrer" class="flex items-center">
+        <div class="shrink-0 mr-2">
+          <%= image_tag "logo.svg", alt: "", width: 32, height: 32 %>
         </div>
+        <span class="text-xl font-medium text-navy">Rocky Mountain Ruby</span>
       </a>
 
       <div class="hidden lg:block">
@@ -13,18 +14,18 @@
             <%= link_to "Dashboard", dashboard_path, class: "text-blue px-3 py-1 text-lg font-medium" %>
             <%= link_to "Schedule", schedule_path, class: "text-blue px-3 py-1 text-lg font-medium" %>
             <%= link_to "My Plan", plan_path, class: "text-blue px-3 py-1 text-lg font-medium" %>
-            <a href="https://blueridgeruby.com/guide" target="_blank" rel="noopener" class="text-blue px-3 py-1 text-lg font-medium">Guide</a>
+            <a href="https://rockymtnruby.dev/boulder-guide/" target="_blank" rel="noopener" class="text-blue px-3 py-1 text-lg font-medium">Guide</a>
             <%= link_to "Annual Report", report_path, class: "text-blue px-3 py-1 text-lg font-medium" %>
             <% if admin? %>
               <%= link_to "Admin", admin_root_path, class: "text-blue px-3 py-1 text-lg font-medium" %>
             <% end %>
             <%= button_to "Sign Out", session_path, method: :delete, class: "text-blue px-3 py-1 text-lg font-medium cursor-pointer" %>
           <% else %>
-            <a href="https://blueridgeruby.com/schedule" class="text-blue px-3 py-1 text-lg font-medium">Schedule</a>
-            <a href="https://blueridgeruby.com/#speakers" class="text-blue px-3 py-1 text-lg font-medium">Speakers</a>
+            <a href="https://rockymtnruby.dev/schedule/" class="text-blue px-3 py-1 text-lg font-medium">Schedule</a>
+            <a href="https://rockymtnruby.dev/#program" class="text-blue px-3 py-1 text-lg font-medium">Program</a>
             <%= link_to "Annual Report", report_path, class: "text-blue px-3 py-1 text-lg font-medium" %>
             <%= link_to "Log In", new_session_path, class: "text-blue px-3 py-1 text-lg font-medium" %>
-            <a href="https://blueridgeruby.com/#register" class="bg-red-gradient text-white font-medium py-2 px-4 shadow-sm rounded-sm cursor-pointer">Register</a>
+            <a href="https://rockymtnruby.dev/tickets/" class="bg-red-gradient text-white font-medium py-2 px-4 shadow-sm rounded-sm cursor-pointer">Register</a>
           <% end %>
         </div>
       </div>
@@ -45,19 +46,19 @@
           <%= link_to "Dashboard", dashboard_path, class: "text-blue block py-2 font-medium" %>
           <%= link_to "Schedule", schedule_path, class: "text-blue block py-2 font-medium" %>
           <%= link_to "My Plan", plan_path, class: "text-blue block py-2 font-medium" %>
-          <a href="https://blueridgeruby.com/guide" target="_blank" rel="noopener" class="text-blue block py-2 font-medium">Guide</a>
+          <a href="https://rockymtnruby.dev/boulder-guide/" target="_blank" rel="noopener" class="text-blue block py-2 font-medium">Guide</a>
           <%= link_to "Annual Report", report_path, class: "text-blue block py-2 font-medium" %>
           <% if admin? %>
             <%= link_to "Admin", admin_root_path, class: "text-blue block py-2 font-medium" %>
           <% end %>
           <%= button_to "Sign Out", session_path, method: :delete, class: "text-blue block py-2 font-medium text-left cursor-pointer" %>
         <% else %>
-          <a href="https://blueridgeruby.com/schedule" class="text-blue block py-2 font-medium">Schedule</a>
-          <a href="https://blueridgeruby.com/#speakers" class="text-blue block py-2 font-medium">Speakers</a>
+          <a href="https://rockymtnruby.dev/schedule/" class="text-blue block py-2 font-medium">Schedule</a>
+          <a href="https://rockymtnruby.dev/#program" class="text-blue block py-2 font-medium">Program</a>
           <%= link_to "Annual Report", report_path, class: "text-blue block py-2 font-medium" %>
           <%= link_to "Log In", new_session_path, class: "text-blue block py-2 font-medium" %>
           <div class="py-2">
-            <a href="https://blueridgeruby.com/#register" class="bg-red-gradient text-white font-medium py-2 px-4 shadow-sm rounded-sm cursor-pointer">Register</a>
+            <a href="https://rockymtnruby.dev/tickets/" class="bg-red-gradient text-white font-medium py-2 px-4 shadow-sm rounded-sm cursor-pointer">Register</a>
           </div>
         <% end %>
       </div>

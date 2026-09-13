@@ -20,7 +20,7 @@ require "prawn"
 # For blank-batch printing, pass `application: nil, count: N` to render
 # N applications back-to-back in one document.
 class PassportApplicationPdf
-  FORM_CODE         = "Form RE-1 (Rev. 2026-04)".freeze
+  FORM_CODE         = "Form RE-1 (Rev. 2026-09)".freeze
   PAGE_SIZE         = "LETTER".freeze
   MARGIN            = 36
   LONG_LINE_HEIGHT  = 9.5
@@ -355,7 +355,7 @@ class PassportApplicationPdf
     pdf.font_size 8
     pdf.text FORM_CODE, align: :right, style: :bold, size: 7
     pdf.text title, size: 11, style: :bold, align: :center
-    pdf.text "Blue Ridge Ruby Embassy · Asheville, NC", size: 7.5, align: :center, style: :italic
+    pdf.text "Rocky Mountain Ruby Embassy · Boulder, CO", size: 7.5, align: :center, style: :italic
     pdf.move_down 3
     pdf.stroke_horizontal_rule
     pdf.move_down 3
@@ -406,16 +406,16 @@ class PassportApplicationPdf
     [
       "EMBASSY ORDINANCES (EXCERPTED)",
       [
-        "§1.  Validity. This application shall remain valid for the duration of Blue Ridge Ruby 2026 and may not be transferred to any subsequent calendar year, conference, or commemorative gathering. Validity does not survive the expiration of the lead maintainer's patience.",
+        "§1.  Validity. This application shall remain valid for the duration of Rocky Mountain Ruby 2026 and may not be transferred to any subsequent calendar year, conference, or commemorative gathering. Validity does not survive the expiration of the lead maintainer's patience.",
         "§2.  Discretion. The Embassy reserves sole and absolute discretion to deny issuance for cause, including but not limited to: insufficient ceremony, ill-fitting suspenders, or a documented hatred of the Ruby programming language.",
         "§3.  Truthfulness. Falsified declarations may result in revocation of Ruby Embassy privileges for up to three (3) event days and forfeiture of any commemorative stamps so obtained. Repeat offenders may be required to write a sincere apology in YAML.",
         "§4.  Notary Conduct. The Applicant shall conduct themselves with reasonable courtesy toward the Notary. Bribery of the Notary is strictly prohibited unless said bribery consists of coffee, in which case discretion is advised.",
-        "§5.  Right of Appeal. Applicants whose stamping is denied may request review by writing to noreply@blueridgeruby.com. Review proceedings, where granted, are conducted ex parte and concluded summarily.",
+        "§5.  Right of Appeal. Applicants whose stamping is denied may request review by writing to noreply@rockymtnruby.dev. Review proceedings, where granted, are conducted ex parte and concluded summarily.",
         "§6.  Liability. The Embassy assumes no liability for stamping-related psychological distress, including but not limited to: imposter syndrome, premature optimization, or the realization that one has been pronouncing \"RubyGems\" wrong this entire time.",
         "§7.  Decorum. The Applicant shall maintain decorum throughout proceedings, defined for purposes of this ordinance as: not laughing audibly during the stamping, not narrating the Notary's signature in real time, and not attempting to high-five the Attaché unless reciprocity is clearly indicated.",
         "§8.  Documentation. The Applicant must retain a copy of the stamped Passport for a period of not less than seven (7) calendar days, after which the document may be displayed on the Applicant's mantel, refrigerator, or other location of comparable ceremony.",
         "§9.  Reciprocal Recognition. The Embassy shall, upon request and at the Attaché's discretion, recognize Passports issued by sister Ruby Embassies hosted at other regional and international Ruby gatherings, subject to verification of the issuing event's standing.",
-        "§10. Jurisdiction. Disputes arising under these ordinances shall be adjudicated within the geographic boundaries of Asheville, North Carolina, or wherever good coffee can be reasonably procured, whichever is more convenient.",
+        "§10. Jurisdiction. Disputes arising under these ordinances shall be adjudicated within the geographic boundaries of Boulder, Colorado, or wherever good coffee can be reasonably procured, whichever is more convenient.",
         "§11. Force Majeure. The Embassy shall not be held liable for failures caused by acts of God, acts of CDN, deprecated dependencies, expired SSL certificates, or the abrupt unavailability of the lead maintainer.",
         "§12. Amendments. These ordinances may be amended at any time by the Embassy Attaché, with or without notice, retroactively if necessary, and the Applicant hereby acknowledges this fact in advance and without further objection.",
         "§13. Counterparts. This document may be executed in counterparts, each of which shall be deemed an original, even when neither is, in fact, an original.",
@@ -434,7 +434,7 @@ class PassportApplicationPdf
         "\"Applicant\" means the natural person identified in Section 1 of this Application, including any pseudonyms, callsigns, GitHub handles, or other documented aliases.",
         "\"Attaché\" means the duly appointed representative of the Embassy on premises during the three (3) event days, identifiable by official Embassy lanyard and a faintly weary expression.",
         "\"Business Gems\" means three (3) RubyGems published open source by Embassy personnel and listed on rubygems.org, irrespective of download count, semantic versioning practices, or whether such Gems remain actively maintained.",
-        "\"Embassy\" means the Blue Ridge Ruby Embassy at Blue Ridge Ruby 2026, including all temporary structures, designated tables, hallway corners, and adjacent vibe zones.",
+        "\"Embassy\" means the Rocky Mountain Ruby Embassy at Rocky Mountain Ruby 2026, including all temporary structures, designated tables, hallway corners, and adjacent vibe zones.",
         "\"Notary\" means any attendee meeting the criteria set forth in Box A.1 of the Addendum, voluntarily acting in such capacity for purposes of this Application only.",
         "\"Passport\" means the formal document issued by the Embassy bearing one or more stamps of recognition, accompanied by such ceremony as the Attaché deems appropriate.",
         "\"Stamping\" means the act of applying said stamp to said Passport, performed by the Attaché in the presence of the Applicant and any onlookers who happen to be present.",

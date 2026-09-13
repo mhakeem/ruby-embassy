@@ -3,21 +3,26 @@ require "test_helper"
 class SeedTest < ActiveSupport::TestCase
   self.use_transactional_tests = false
 
+  SEEDED_ADMIN_EMAILS = %w[
+    spike@rockymtnruby.dev
+  ].freeze
+
   setup do
-    User.where(email: [ "jeremy@blueridgeruby.com", "katyasarmientodev@gmail.com" ]).destroy_all
+    User.where(email: SEEDED_ADMIN_EMAILS).destroy_all
     ScheduleItem.where.not(id: nil).destroy_all
   end
 
   teardown do
-    User.where(email: [ "jeremy@blueridgeruby.com", "katyasarmientodev@gmail.com" ]).destroy_all
+    User.where(email: SEEDED_ADMIN_EMAILS).destroy_all
     ScheduleItem.where.not(id: nil).destroy_all
   end
 
-  test "seed makes jeremy and katya admins, idempotently" do
+  test "seed makes spike an admin, idempotently" do
     2.times { Rails.application.load_seed }
 
-    assert User.find_by(email: "jeremy@blueridgeruby.com").admin?
-    assert User.find_by(email: "katyasarmientodev@gmail.com").admin?
+    SEEDED_ADMIN_EMAILS.each do |email|
+      assert User.find_by(email: email).admin?, "#{email} should be an admin"
+    end
   end
 
   test "seed upserts every YAML row as a ScheduleItem, public unless flagged otherwise" do

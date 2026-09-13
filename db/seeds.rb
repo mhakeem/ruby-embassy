@@ -1,11 +1,11 @@
 # Seeds are idempotent — safe to run repeatedly, including in production.
 
 # 1. Admin users. find_or_initialize_by + explicit save! ensures an existing
-#    row gets updated to role: :admin (e.g., if Jeremy already exists in prod
-#    but with a different role, this corrects it).
+#    row gets updated to role: :admin if it already exists in prod but with
+#    a different role.
 admin_users = [
-  { email: "jeremy@blueridgeruby.com",    first_name: "Jeremy", last_name: "Smith" },
-  { email: "katyasarmientodev@gmail.com", first_name: "Katya",  last_name: "Sarmiento" }
+  { email: "katyasarmientodev@gmail.com", first_name: "Katya", last_name: "Sarmiento" },
+  { email: "spike@rockymtnruby.dev",      first_name: "Spike", last_name: "" }
 ]
 
 admin_users.each do |attrs|

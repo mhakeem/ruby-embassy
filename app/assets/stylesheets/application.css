@@ -1,5 +1,5 @@
 /* ============================================================
- * Ruby Embassy — plain CSS that mirrors the blueridgeruby.com
+ * Ruby Embassy — plain CSS that mirrors the rockymtnruby.dev
  * styling. The HTML uses the same Tailwind-style class names
  * the real site uses, so the markup is copy-paste compatible.
  * Only the specific utilities used on that page are defined.
@@ -448,7 +448,7 @@ hr {
 }
 
 
-/* ---------- Schedule day sections (blueridgeruby.com style) -- */
+/* ---------- Schedule day sections (rockymtnruby.dev style) -- */
 
 .schedule-day {
   margin-bottom: 5rem;

@@ -59,11 +59,11 @@ Rails.application.configure do
 
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = {
-    host: ENV.fetch("APP_HOST", "app.blueridgeruby.com"),
+    host: ENV.fetch("APP_HOST", "app.rockymtnruby.dev"),
     protocol: "https"
   }
 
-  # Send email via Postmark (matches ashevillagers stack)
+  # Send email via Postmark
   config.action_mailer.delivery_method = :postmark
   config.action_mailer.postmark_settings = { api_token: ENV["POSTMARK_API_TOKEN"] }
 

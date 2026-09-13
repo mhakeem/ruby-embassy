@@ -3,7 +3,7 @@ require "test_helper"
 class ScheduleItemTest < ActiveSupport::TestCase
   def valid_attrs(overrides = {})
     {
-      day: "thu",
+      day: "mon",
       title: "Test Item",
       kind: :activity,
       is_public: true
@@ -147,18 +147,18 @@ class ScheduleItemTest < ActiveSupport::TestCase
   end
 
   test "ordered scope orders by day then sort_time" do
-    wed_am = ScheduleItem.create!(valid_attrs(day: "wed", sort_time: 900, title: "Wed AM"))
-    wed_pm = ScheduleItem.create!(valid_attrs(day: "wed", sort_time: 1800, title: "Wed PM"))
-    thu_am = ScheduleItem.create!(valid_attrs(day: "thu", sort_time: 900, title: "Thu AM"))
-    ordered = ScheduleItem.where(id: [ wed_am.id, wed_pm.id, thu_am.id ]).ordered
-    assert_equal [ wed_am, wed_pm, thu_am ], ordered.to_a
+    mon_am = ScheduleItem.create!(valid_attrs(day: "mon", sort_time: 900, title: "Mon AM"))
+    mon_pm = ScheduleItem.create!(valid_attrs(day: "mon", sort_time: 1800, title: "Mon PM"))
+    tue_am = ScheduleItem.create!(valid_attrs(day: "tue", sort_time: 900, title: "Tue AM"))
+    ordered = ScheduleItem.where(id: [ mon_am.id, mon_pm.id, tue_am.id ]).ordered
+    assert_equal [ mon_am, mon_pm, tue_am ], ordered.to_a
   end
 
-  test "ordered scope places Sunday after Saturday" do
-    sat = ScheduleItem.create!(valid_attrs(day: "sat", sort_time: 1800, title: "Sat PM"))
-    sun = ScheduleItem.create!(valid_attrs(day: "sun", sort_time: 900,  title: "Sun AM brunch"))
-    ordered = ScheduleItem.where(id: [ sat.id, sun.id ]).ordered
-    assert_equal [ sat, sun ], ordered.to_a
+  test "ordered scope places Monday after Sunday" do
+    sun = ScheduleItem.create!(valid_attrs(day: "sun", sort_time: 1800, title: "Sun PM"))
+    mon = ScheduleItem.create!(valid_attrs(day: "mon", sort_time: 900,  title: "Mon AM"))
+    ordered = ScheduleItem.where(id: [ sun.id, mon.id ]).ordered
+    assert_equal [ sun, mon ], ordered.to_a
   end
 
   test "DAY_META includes Sunday" do
@@ -167,12 +167,11 @@ class ScheduleItemTest < ActiveSupport::TestCase
   end
 
   test "upcoming_day_keys returns conference days on or after the given date" do
-    assert_equal %w[wed thu fri sat sun], ScheduleItem.upcoming_day_keys(Date.new(2026, 4, 27))
-    assert_equal %w[wed thu fri sat sun], ScheduleItem.upcoming_day_keys(Date.new(2026, 4, 29))
-    assert_equal %w[thu fri sat sun],     ScheduleItem.upcoming_day_keys(Date.new(2026, 4, 30))
-    assert_equal %w[fri sat sun],         ScheduleItem.upcoming_day_keys(Date.new(2026, 5, 1))
-    assert_equal %w[sun],                 ScheduleItem.upcoming_day_keys(Date.new(2026, 5, 3))
-    assert_equal [],                      ScheduleItem.upcoming_day_keys(Date.new(2026, 5, 4))
+    assert_equal %w[sun mon tue], ScheduleItem.upcoming_day_keys(Date.new(2026, 9, 26))
+    assert_equal %w[sun mon tue], ScheduleItem.upcoming_day_keys(Date.new(2026, 9, 27))
+    assert_equal %w[mon tue],     ScheduleItem.upcoming_day_keys(Date.new(2026, 9, 28))
+    assert_equal %w[tue],         ScheduleItem.upcoming_day_keys(Date.new(2026, 9, 29))
+    assert_equal [],              ScheduleItem.upcoming_day_keys(Date.new(2026, 9, 30))
   end
 
   test "passed defaults to false" do

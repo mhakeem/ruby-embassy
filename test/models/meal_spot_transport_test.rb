@@ -2,7 +2,7 @@ require "test_helper"
 
 class MealSpotTransportTest < ActiveSupport::TestCase
   def setup
-    @meal = ScheduleItem.create!(day: "thu", title: "Dinner", kind: :meal, is_public: true)
+    @meal = ScheduleItem.create!(day: "mon", title: "Dinner", kind: :meal, is_public: true)
     @spot = @meal.meal_spots.create!(name: "Pinewood", created_by: users(:attendee_one))
   end
 

@@ -3,7 +3,7 @@ require "test_helper"
 class LightningTalkSignupTest < ActiveSupport::TestCase
   def lightning_item(overrides = {})
     ScheduleItem.create!({
-      day: "fri",
+      day: "mon",
       title: "Lightning Talks",
       kind: :lightning,
       sort_time: 1400,
@@ -13,7 +13,7 @@ class LightningTalkSignupTest < ActiveSupport::TestCase
   end
 
   def non_lightning_item
-    ScheduleItem.create!(day: "fri", title: "Regular Talk", kind: :talk, is_public: true)
+    ScheduleItem.create!(day: "mon", title: "Regular Talk", kind: :talk, is_public: true)
   end
 
   test "rejects signup for non-lightning schedule item" do

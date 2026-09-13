@@ -3,7 +3,7 @@ require "test_helper"
 class UserTest < ActiveSupport::TestCase
   test "destroying user destroys their plan_items" do
     user = users(:attendee_one)
-    item = ScheduleItem.create!(day: "thu", title: "Destroy test", kind: :activity, is_public: true)
+    item = ScheduleItem.create!(day: "mon", title: "Destroy test", kind: :activity, is_public: true)
     user.plan_items.create!(schedule_item: item)
 
     assert_difference -> { PlanItem.count }, -1 do
@@ -14,7 +14,7 @@ class UserTest < ActiveSupport::TestCase
   test "destroying user nullifies created_schedule_items (items survive)" do
     creator = users(:attendee_one)
     item = ScheduleItem.create!(
-      day: "thu",
+      day: "mon",
       title: "Creator-owned",
       kind: :activity,
       is_public: true,
@@ -29,19 +29,19 @@ class UserTest < ActiveSupport::TestCase
 
   test "planned_schedule_items returns items on user's plan" do
     user = users(:attendee_one)
-    item = ScheduleItem.create!(day: "fri", title: "Planned", kind: :talk, is_public: true)
+    item = ScheduleItem.create!(day: "mon", title: "Planned", kind: :talk, is_public: true)
     user.plan_items.create!(schedule_item: item)
 
     assert_includes user.planned_schedule_items, item
   end
 
   test "new user is auto-RSVPed to all default-plan items" do
-    talk      = ScheduleItem.create!(day: "thu", title: "Default Talk", kind: :talk, is_public: true)
-    reception = ScheduleItem.create!(day: "thu", title: "Default Reception", kind: :reception, is_public: true)
-    activity  = ScheduleItem.create!(day: "sat", title: "Optional Activity", kind: :activity, is_public: true)
-    private_talk = ScheduleItem.create!(day: "thu", title: "Private Talk", kind: :talk, is_public: false)
+    talk      = ScheduleItem.create!(day: "mon", title: "Default Talk", kind: :talk, is_public: true)
+    reception = ScheduleItem.create!(day: "mon", title: "Default Reception", kind: :reception, is_public: true)
+    activity  = ScheduleItem.create!(day: "tue", title: "Optional Activity", kind: :activity, is_public: true)
+    private_talk = ScheduleItem.create!(day: "mon", title: "Private Talk", kind: :talk, is_public: false)
     volunteers_only_reception = ScheduleItem.create!(
-      day: "thu", title: "Crew Reception", kind: :reception,
+      day: "mon", title: "Crew Reception", kind: :reception,
       is_public: true, audience: "volunteers_only"
     )
 
@@ -55,23 +55,33 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "new user is auto-RSVPed to slug-allowlisted items even when kind isn't a default" do
-    mystery = ScheduleItem.create!(
-      slug: "thu-mystery", day: "thu", title: "Mystery Activity",
+    # DEFAULT_PLAN_SLUGS is empty for the current (RMR) schedule — this fork
+    # has no one-off item that needs force-adding. Stub it so the general
+    # mechanism (added for BRR's "Mystery Activity") still has coverage
+    # independent of whatever the seeded schedule happens to contain.
+    allowlisted = ScheduleItem.create!(
+      slug: "test-oneoff", day: "mon", title: "One-off Activity",
       kind: :community, is_public: true
     )
     other_community = ScheduleItem.create!(
-      slug: "wed-meetup", day: "wed", title: "Pre-Conference Meetup",
+      slug: "test-other-community", day: "sun", title: "Other Community Item",
       kind: :community, is_public: true
     )
 
+    ScheduleItem.send(:remove_const, :DEFAULT_PLAN_SLUGS)
+    ScheduleItem.const_set(:DEFAULT_PLAN_SLUGS, %w[test-oneoff].freeze)
+
     user = User.create!(email: "mystery@example.com", first_name: "M", last_name: "Y")
 
-    assert_includes user.planned_schedule_items, mystery, "slug-allowlisted item should be auto-added"
+    assert_includes user.planned_schedule_items, allowlisted, "slug-allowlisted item should be auto-added"
     assert_not_includes user.planned_schedule_items, other_community, "other community items should not auto-add"
+  ensure
+    ScheduleItem.send(:remove_const, :DEFAULT_PLAN_SLUGS)
+    ScheduleItem.const_set(:DEFAULT_PLAN_SLUGS, [].freeze)
   end
 
   test "materialize_default_plan_items is idempotent" do
-    ScheduleItem.create!(day: "thu", title: "Default Talk", kind: :talk, is_public: true)
+    ScheduleItem.create!(day: "mon", title: "Default Talk", kind: :talk, is_public: true)
     user = User.create!(email: "idem@example.com", first_name: "I", last_name: "D")
 
     assert_no_difference -> { user.plan_items.count } do
@@ -86,11 +96,11 @@ class UserTest < ActiveSupport::TestCase
 
   test "last_rsvp_contact_method picks the most recent value across meals and activities" do
     user = users(:attendee_one)
-    activity = ScheduleItem.create!(day: "thu", title: "Hike", kind: :activity, is_public: true)
+    activity = ScheduleItem.create!(day: "mon", title: "Hike", kind: :activity, is_public: true)
     plan = user.plan_items.create!(schedule_item: activity, contact_method: "older value")
     plan.update_columns(updated_at: 2.days.ago)
 
-    meal = ScheduleItem.create!(day: "thu", title: "Lunch", kind: :meal, is_public: true)
+    meal = ScheduleItem.create!(day: "mon", title: "Lunch", kind: :meal, is_public: true)
     spot = meal.meal_spots.create!(name: "Pinewood", created_by: users(:volunteer_one))
     transport = spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
     transport.rsvps.create!(user: user, contact_method: "newer value")
@@ -100,10 +110,10 @@ class UserTest < ActiveSupport::TestCase
 
   test "last_rsvp_contact_method ignores blank entries" do
     user = users(:attendee_one)
-    activity = ScheduleItem.create!(day: "thu", title: "Hike", kind: :activity, is_public: true)
+    activity = ScheduleItem.create!(day: "mon", title: "Hike", kind: :activity, is_public: true)
     user.plan_items.create!(schedule_item: activity, contact_method: "real value")
 
-    other = ScheduleItem.create!(day: "fri", title: "Other", kind: :activity, is_public: true)
+    other = ScheduleItem.create!(day: "mon", title: "Other", kind: :activity, is_public: true)
     user.plan_items.create!(schedule_item: other, contact_method: "")
 
     assert_equal "real value", user.last_rsvp_contact_method
@@ -111,13 +121,13 @@ class UserTest < ActiveSupport::TestCase
 
   test "propagate_contact_to_blank_rsvps! fills only blank meal RSVPs and plan_items" do
     user = users(:attendee_one)
-    blank_activity = ScheduleItem.create!(day: "thu", title: "Hike", kind: :activity, is_public: true)
-    set_activity   = ScheduleItem.create!(day: "fri", title: "Bike", kind: :activity, is_public: true)
+    blank_activity = ScheduleItem.create!(day: "mon", title: "Hike", kind: :activity, is_public: true)
+    set_activity   = ScheduleItem.create!(day: "mon", title: "Bike", kind: :activity, is_public: true)
     blank_pi = user.plan_items.create!(schedule_item: blank_activity)
     blank_pi.update_columns(contact_method: nil)
     set_pi   = user.plan_items.create!(schedule_item: set_activity, contact_method: "explicit")
 
-    meal = ScheduleItem.create!(day: "thu", title: "Lunch", kind: :meal, is_public: true)
+    meal = ScheduleItem.create!(day: "mon", title: "Lunch", kind: :meal, is_public: true)
     spot = meal.meal_spots.create!(name: "Pinewood", created_by: users(:volunteer_one))
     transport = spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
     blank_rsvp = transport.rsvps.create!(user: user)
@@ -132,7 +142,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "propagate_contact_to_blank_rsvps! is a no-op for blank input" do
     user = users(:attendee_one)
-    activity = ScheduleItem.create!(day: "thu", title: "Hike", kind: :activity, is_public: true)
+    activity = ScheduleItem.create!(day: "mon", title: "Hike", kind: :activity, is_public: true)
     pi = user.plan_items.create!(schedule_item: activity)
     pi.update_columns(contact_method: nil)
 

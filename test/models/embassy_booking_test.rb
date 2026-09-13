@@ -3,7 +3,7 @@ require "test_helper"
 class EmbassyBookingTest < ActiveSupport::TestCase
   setup do
     @item = ScheduleItem.create!(
-      day: "thu", title: "Embassy Block", kind: :embassy, is_public: true,
+      day: "mon", title: "Embassy Block", kind: :embassy, is_public: true,
       offers_new_passport: true, new_passport_capacity: 4,
       offers_passport_pickup: true, passport_pickup_capacity: 2
     )

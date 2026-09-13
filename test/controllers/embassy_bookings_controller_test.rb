@@ -3,7 +3,7 @@ require "test_helper"
 class EmbassyBookingsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @block = ScheduleItem.create!(
-      day: "thu", title: "Embassy Block", kind: :embassy, is_public: true,
+      day: "mon", title: "Embassy Block", kind: :embassy, is_public: true,
       offers_new_passport: true, new_passport_capacity: 2,
       offers_stamping: true, stamping_capacity: 1,
       offers_passport_pickup: true, passport_pickup_capacity: 1,

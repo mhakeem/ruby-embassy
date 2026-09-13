@@ -18,7 +18,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "admin show page lists the user's plan items" do
     alice = users(:attendee_one)
     item = ScheduleItem.create!(
-      day: "fri",
+      day: "mon",
       title: "Alice planned activity",
       kind: :activity,
       is_public: true,
@@ -34,9 +34,9 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
 
   test "admin show hides passed plan items by default and shows them with show_past=1" do
     alice = users(:attendee_one)
-    upcoming = ScheduleItem.create!(day: "fri", title: "Show-upcoming", kind: :activity,
+    upcoming = ScheduleItem.create!(day: "mon", title: "Show-upcoming", kind: :activity,
                                     is_public: true, time_label: "10:00 AM", sort_time: 1000)
-    finished = ScheduleItem.create!(day: "fri", title: "Show-done", kind: :activity,
+    finished = ScheduleItem.create!(day: "mon", title: "Show-done", kind: :activity,
                                     is_public: true, time_label: "11:00 AM", sort_time: 1100, passed: true)
     alice.plan_items.create!(schedule_item: upcoming)
     alice.plan_items.create!(schedule_item: finished)
@@ -54,15 +54,15 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "admin show page hides talks and receptions from the plan section" do
     alice = users(:attendee_one)
     talk = ScheduleItem.create!(
-      day: "fri", title: "Default Talk", kind: :talk,
+      day: "mon", title: "Default Talk", kind: :talk,
       is_public: true, time_label: "10:00 AM", sort_time: 1000
     )
     reception = ScheduleItem.create!(
-      day: "fri", title: "Default Reception", kind: :reception,
+      day: "mon", title: "Default Reception", kind: :reception,
       is_public: true, time_label: "6:00 PM", sort_time: 1800
     )
     activity = ScheduleItem.create!(
-      day: "sat", title: "Optional Activity", kind: :activity,
+      day: "tue", title: "Optional Activity", kind: :activity,
       is_public: true, time_label: "2:00 PM", sort_time: 1400
     )
     alice.plan_items.create!(schedule_item: talk)
@@ -89,7 +89,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "show page lists events the user is hosting under Hosting" do
     alice = users(:attendee_one)
     ScheduleItem.create!(
-      day: "fri",
+      day: "mon",
       title: "Alice hosted session",
       host: alice.full_name,
       kind: :talk,
@@ -108,7 +108,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "show page surfaces an embassy plan item under its own section" do
     alice = users(:attendee_one)
     embassy = ScheduleItem.create!(
-      day: "sat",
+      day: "tue",
       title: "Alice embassy slot",
       kind: :embassy,
       is_public: true,
@@ -129,7 +129,7 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
   test "embassy plan items do not appear in the generic plan section" do
     alice = users(:attendee_one)
     embassy = ScheduleItem.create!(
-      day: "sat",
+      day: "tue",
       title: "Only embassy item",
       kind: :embassy,
       is_public: true,

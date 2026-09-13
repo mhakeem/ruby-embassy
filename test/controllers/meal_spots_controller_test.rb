@@ -2,8 +2,8 @@ require "test_helper"
 
 class MealSpotsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @meal = ScheduleItem.create!(day: "thu", title: "Lunch", kind: :meal, is_public: true)
-    @talk = ScheduleItem.create!(day: "thu", title: "Keynote", kind: :talk, is_public: true)
+    @meal = ScheduleItem.create!(day: "mon", title: "Lunch", kind: :meal, is_public: true)
+    @talk = ScheduleItem.create!(day: "mon", title: "Keynote", kind: :talk, is_public: true)
   end
 
   test "anonymous index redirects to sign-in" do
@@ -155,7 +155,7 @@ class MealSpotsControllerTest < ActionDispatch::IntegrationTest
   # ----- Hosted meals -----------------------------------------------------
 
   def hosted_meal
-    @hosted_meal ||= ScheduleItem.create!(day: "thu", title: "Welcome dinner", kind: :meal,
+    @hosted_meal ||= ScheduleItem.create!(day: "mon", title: "Welcome dinner", kind: :meal,
                                            is_public: true, host: "Alice",
                                            location: "Pleasant Garden Inn",
                                            map_url: "https://maps.app.goo.gl/x")

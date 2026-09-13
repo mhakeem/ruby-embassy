@@ -3,7 +3,7 @@ class ScheduleItemsController < ApplicationController
 
   def new
     @schedule_item = current_user.created_schedule_items.build(
-      day: params[:day] || "sat",
+      day: params[:day] || "mon",
       flexible: false,
       is_public: ActiveModel::Type::Boolean.new.cast(params.dig(:schedule_item, :is_public))
     )

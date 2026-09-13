@@ -1,10 +1,11 @@
 class ScheduleItem < ApplicationRecord
   EMBASSY_MODES = %w[new_passport stamping passport_pickup].freeze
-  HACK_DAY_SLUG = "sat-hackday"
+  HACK_DAY_SLUG = "tue-hackday"
   DEFAULT_PLAN_KINDS = %w[talk reception].freeze
   # One-off slugs that don't fit a default-plan kind but are still part of
-  # the main programming every attendee is auto-RSVPed to.
-  DEFAULT_PLAN_SLUGS = %w[thu-mystery].freeze
+  # the main programming every attendee is auto-RSVPed to. None for RMR
+  # currently — the BRR fork used this for a one-off "Mystery Activity".
+  DEFAULT_PLAN_SLUGS = [].freeze
 
   belongs_to :created_by, class_name: "User", optional: true
   has_many :plan_items, dependent: :destroy
@@ -34,19 +35,15 @@ class ScheduleItem < ApplicationRecord
   validate  :capacity_present_for_offered_modes, if: :embassy?
 
   DAY_META = {
-    "wed" => { label: "Wednesday", date: "April 29", subtitle: "Pre-Conference" },
-    "thu" => { label: "Thursday",  date: "April 30", subtitle: "Conference Day 1" },
-    "fri" => { label: "Friday",    date: "May 1",    subtitle: "Conference Day 2" },
-    "sat" => { label: "Saturday",  date: "May 2",    subtitle: "Activities & Ruby Embassy" },
-    "sun" => { label: "Sunday",    date: "May 3",    subtitle: "Departures" }
+    "sun" => { label: "Sunday",  date: "September 27", subtitle: "Pre-Conference" },
+    "mon" => { label: "Monday",  date: "September 28", subtitle: "Conference Day 1" },
+    "tue" => { label: "Tuesday", date: "September 29", subtitle: "Conference Day 2" }
   }.freeze
 
   CONFERENCE_DATES = {
-    "wed" => Date.new(2026, 4, 29),
-    "thu" => Date.new(2026, 4, 30),
-    "fri" => Date.new(2026, 5,  1),
-    "sat" => Date.new(2026, 5,  2),
-    "sun" => Date.new(2026, 5,  3)
+    "sun" => Date.new(2026, 9, 27),
+    "mon" => Date.new(2026, 9, 28),
+    "tue" => Date.new(2026, 9, 29)
   }.freeze
   private_constant :CONFERENCE_DATES
 
@@ -66,12 +63,10 @@ class ScheduleItem < ApplicationRecord
     order(
       Arel.sql(
         "CASE day " \
-          "WHEN 'wed' THEN 1 " \
-          "WHEN 'thu' THEN 2 " \
-          "WHEN 'fri' THEN 3 " \
-          "WHEN 'sat' THEN 4 " \
-          "WHEN 'sun' THEN 5 " \
-          "ELSE 6 END"
+          "WHEN 'sun' THEN 1 " \
+          "WHEN 'mon' THEN 2 " \
+          "WHEN 'tue' THEN 3 " \
+          "ELSE 4 END"
       ),
       :sort_time
     )

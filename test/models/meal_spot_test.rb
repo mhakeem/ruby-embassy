@@ -2,7 +2,7 @@ require "test_helper"
 
 class MealSpotTest < ActiveSupport::TestCase
   def meal
-    @meal ||= ScheduleItem.create!(day: "thu", title: "Lunch", kind: :meal, is_public: true)
+    @meal ||= ScheduleItem.create!(day: "mon", title: "Lunch", kind: :meal, is_public: true)
   end
 
   def build_spot(name: "Hattie B's", creator: users(:attendee_one))
@@ -10,7 +10,7 @@ class MealSpotTest < ActiveSupport::TestCase
   end
 
   test "rejects spots whose parent isn't a meal" do
-    talk = ScheduleItem.create!(day: "thu", title: "Keynote", kind: :talk, is_public: true)
+    talk = ScheduleItem.create!(day: "mon", title: "Keynote", kind: :talk, is_public: true)
     spot = talk.meal_spots.build(name: "Anywhere", created_by: users(:attendee_one))
     assert_not spot.valid?
     assert_includes spot.errors[:schedule_item], "must be a meal event"
@@ -50,7 +50,7 @@ class MealSpotTest < ActiveSupport::TestCase
   # ----- Canonical spot for hosted meals ----------------------------------
 
   test "canonical_for_hosted! creates one spot mirroring the meal's location" do
-    hosted = ScheduleItem.create!(day: "thu", title: "Welcome dinner", kind: :meal,
+    hosted = ScheduleItem.create!(day: "mon", title: "Welcome dinner", kind: :meal,
                                    is_public: true, host: "Alice",
                                    location: "Pleasant Garden Inn",
                                    map_url: "https://maps.app.goo.gl/x")
@@ -63,7 +63,7 @@ class MealSpotTest < ActiveSupport::TestCase
   end
 
   test "canonical_for_hosted! falls back to host when location is blank" do
-    hosted = ScheduleItem.create!(day: "thu", title: "Pop-up brunch", kind: :meal,
+    hosted = ScheduleItem.create!(day: "mon", title: "Pop-up brunch", kind: :meal,
                                    is_public: true, host: "Alice's place",
                                    host_url: "https://maps.app.goo.gl/y")
 
@@ -73,7 +73,7 @@ class MealSpotTest < ActiveSupport::TestCase
   end
 
   test "canonical_for_hosted! is idempotent" do
-    hosted = ScheduleItem.create!(day: "thu", title: "Welcome dinner", kind: :meal,
+    hosted = ScheduleItem.create!(day: "mon", title: "Welcome dinner", kind: :meal,
                                    is_public: true, host: "Alice",
                                    location: "Pleasant Garden Inn")
 
@@ -84,7 +84,7 @@ class MealSpotTest < ActiveSupport::TestCase
   end
 
   test "canonical_for_hosted? returns true only for nil-creator spots on hosted meals" do
-    hosted = ScheduleItem.create!(day: "thu", title: "Welcome dinner", kind: :meal,
+    hosted = ScheduleItem.create!(day: "mon", title: "Welcome dinner", kind: :meal,
                                    is_public: true, host: "Alice",
                                    location: "Pleasant Garden Inn")
     canonical = MealSpot.canonical_for_hosted!(hosted)
@@ -95,7 +95,7 @@ class MealSpotTest < ActiveSupport::TestCase
   end
 
   test "editable_by? on a canonical (nil-creator) spot allows admins only" do
-    hosted = ScheduleItem.create!(day: "thu", title: "Welcome dinner", kind: :meal,
+    hosted = ScheduleItem.create!(day: "mon", title: "Welcome dinner", kind: :meal,
                                    is_public: true, host: "Alice",
                                    location: "Pleasant Garden Inn")
     canonical = MealSpot.canonical_for_hosted!(hosted)
@@ -106,7 +106,7 @@ class MealSpotTest < ActiveSupport::TestCase
   end
 
   test "transfer_ownership_if_creator_left! is a no-op for canonical spots" do
-    hosted = ScheduleItem.create!(day: "thu", title: "Welcome dinner", kind: :meal,
+    hosted = ScheduleItem.create!(day: "mon", title: "Welcome dinner", kind: :meal,
                                    is_public: true, host: "Alice",
                                    location: "Pleasant Garden Inn")
     canonical = MealSpot.canonical_for_hosted!(hosted)

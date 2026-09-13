@@ -3,8 +3,8 @@ require "test_helper"
 class Admin::HackProjectsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @hack_day = ScheduleItem.create!(
-      slug: "sat-hackday",
-      day: "sat",
+      slug: ScheduleItem::HACK_DAY_SLUG,
+      day: "tue",
       time_label: "9:00 AM",
       sort_time: 900,
       title: "Hack Day",

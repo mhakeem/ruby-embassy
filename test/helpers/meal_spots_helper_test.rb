@@ -2,7 +2,7 @@ require "test_helper"
 
 class MealSpotsHelperTest < ActionView::TestCase
   setup do
-    @meal      = ScheduleItem.create!(day: "thu", title: "Lunch", kind: :meal, is_public: true)
+    @meal      = ScheduleItem.create!(day: "mon", title: "Lunch", kind: :meal, is_public: true)
     @host      = users(:attendee_one)
     @spot      = @meal.meal_spots.create!(name: "Pinewood", created_by: @host)
     @walking   = @spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)

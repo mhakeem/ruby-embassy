@@ -9,7 +9,7 @@ class Admin::VolunteerSlotsControllerTest < ActionDispatch::IntegrationTest
 
   test "admin sees the slot index with capacity status" do
     ScheduleItem.create!(
-      day: "fri", title: "Stamp passports",
+      day: "mon", title: "Stamp passports",
       kind: :volunteer, is_public: true, volunteer_capacity: 3
     )
 
@@ -22,7 +22,7 @@ class Admin::VolunteerSlotsControllerTest < ActionDispatch::IntegrationTest
 
   test "admin show page lists signups + add form" do
     slot = ScheduleItem.create!(
-      day: "fri", title: "Stamp passports",
+      day: "mon", title: "Stamp passports",
       kind: :volunteer, is_public: true, volunteer_capacity: 3
     )
     slot.plan_items.create!(user: users(:volunteer_one))
@@ -35,7 +35,7 @@ class Admin::VolunteerSlotsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "admin show page returns 404 for non-volunteer-kind item" do
-    talk = ScheduleItem.create!(day: "fri", title: "A talk", kind: :talk, is_public: true)
+    talk = ScheduleItem.create!(day: "mon", title: "A talk", kind: :talk, is_public: true)
     sign_in_as users(:jeremy)
     get admin_volunteer_slot_path(talk)
     assert_response :not_found
@@ -43,7 +43,7 @@ class Admin::VolunteerSlotsControllerTest < ActionDispatch::IntegrationTest
 
   test "admin show page hides add form when slot is full" do
     slot = ScheduleItem.create!(
-      day: "fri", title: "Cleanup",
+      day: "mon", title: "Cleanup",
       kind: :volunteer, is_public: true, volunteer_capacity: 1
     )
     slot.plan_items.create!(user: users(:volunteer_one))

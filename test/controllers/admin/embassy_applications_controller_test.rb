@@ -18,11 +18,11 @@ class Admin::EmbassyApplicationsControllerTest < ActionDispatch::IntegrationTest
 
   setup do
     @passport_block = ScheduleItem.create!(
-      day: "thu", title: "Passport Block", kind: :embassy, is_public: true,
+      day: "mon", title: "Passport Block", kind: :embassy, is_public: true,
       offers_new_passport: true, new_passport_capacity: 4
     )
     @pickup_block = ScheduleItem.create!(
-      day: "sat", title: "Pickup Block", kind: :embassy, is_public: true,
+      day: "tue", title: "Pickup Block", kind: :embassy, is_public: true,
       offers_passport_pickup: true, passport_pickup_capacity: 2,
       time_label: "2:00 PM", sort_time: 1400
     )

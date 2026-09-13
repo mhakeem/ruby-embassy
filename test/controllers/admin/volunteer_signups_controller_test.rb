@@ -3,7 +3,7 @@ require "test_helper"
 class Admin::VolunteerSignupsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @slot = ScheduleItem.create!(
-      day: "fri", title: "Stamp passports",
+      day: "mon", title: "Stamp passports",
       kind: :volunteer, is_public: true, volunteer_capacity: 2
     )
   end
@@ -49,7 +49,7 @@ class Admin::VolunteerSignupsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "admin cannot use this endpoint for non-volunteer-kind items (scoped finder)" do
-    talk = ScheduleItem.create!(day: "fri", title: "A talk", kind: :talk, is_public: true)
+    talk = ScheduleItem.create!(day: "mon", title: "A talk", kind: :talk, is_public: true)
     sign_in_as users(:jeremy)
     assert_no_difference -> { PlanItem.count } do
       post admin_volunteer_signups_path,

@@ -2,7 +2,7 @@ require "test_helper"
 
 class MealSpotRsvpsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @meal      = ScheduleItem.create!(day: "thu", title: "Lunch", kind: :meal, is_public: true)
+    @meal      = ScheduleItem.create!(day: "mon", title: "Lunch", kind: :meal, is_public: true)
     @spot_a    = @meal.meal_spots.create!(name: "Hattie B's", created_by: users(:attendee_one))
     @spot_b    = @meal.meal_spots.create!(name: "Pinewood",   created_by: users(:attendee_one))
     @walking_a = @spot_a.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
@@ -181,11 +181,11 @@ class MealSpotRsvpsControllerTest < ActionDispatch::IntegrationTest
     rsvp = @walking_a.rsvps.create!(user: user)
     rsvp.update_columns(contact_method: nil)
 
-    other_activity = ScheduleItem.create!(day: "sat", title: "Hike", kind: :activity, is_public: true)
+    other_activity = ScheduleItem.create!(day: "tue", title: "Hike", kind: :activity, is_public: true)
     other_pi = user.plan_items.create!(schedule_item: other_activity)
     other_pi.update_columns(contact_method: nil)
 
-    set_activity = ScheduleItem.create!(day: "sat", title: "Bike", kind: :activity, is_public: true)
+    set_activity = ScheduleItem.create!(day: "tue", title: "Bike", kind: :activity, is_public: true)
     set_pi = user.plan_items.create!(schedule_item: set_activity, contact_method: "explicit")
 
     patch schedule_item_meal_spot_rsvp_path(@meal, @spot_a, rsvp),

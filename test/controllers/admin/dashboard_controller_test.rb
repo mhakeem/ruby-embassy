@@ -29,7 +29,7 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
 
   test "dashboard shows counts" do
     # Seed a handful of items so counts are non-zero
-    ScheduleItem.create!(day: "thu", title: "Count test", kind: :activity, is_public: true)
+    ScheduleItem.create!(day: "mon", title: "Count test", kind: :activity, is_public: true)
 
     sign_in_as users(:jeremy)
     get admin_root_path
@@ -38,10 +38,10 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "rsvps count excludes talks, reception, and volunteer kinds" do
-    activity  = ScheduleItem.create!(day: "thu", title: "Hike",    kind: :activity)
-    talk      = ScheduleItem.create!(day: "thu", title: "Keynote", kind: :talk)
-    reception = ScheduleItem.create!(day: "thu", title: "Welcome", kind: :reception)
-    volunteer = ScheduleItem.create!(day: "thu", title: "Stamp",   kind: :volunteer, volunteer_capacity: 5)
+    activity  = ScheduleItem.create!(day: "mon", title: "Hike",    kind: :activity)
+    talk      = ScheduleItem.create!(day: "mon", title: "Keynote", kind: :talk)
+    reception = ScheduleItem.create!(day: "mon", title: "Welcome", kind: :reception)
+    volunteer = ScheduleItem.create!(day: "mon", title: "Stamp",   kind: :volunteer, volunteer_capacity: 5)
 
     activity.plan_items.create!(user: users(:attendee_one))   # counted
     talk.plan_items.create!(user: users(:attendee_one))       # excluded
@@ -57,11 +57,11 @@ class Admin::DashboardControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "volunteers needed count: empty volunteer slots on today or later days" do
-    travel_to Date.new(2026, 4, 30) do # thu
-      ScheduleItem.create!(day: "wed", title: "Past empty",   kind: :volunteer, volunteer_capacity: 3)
-      ScheduleItem.create!(day: "thu", title: "Today empty",  kind: :volunteer, volunteer_capacity: 3)
-      ScheduleItem.create!(day: "sat", title: "Future empty", kind: :volunteer, volunteer_capacity: 3)
-      filled = ScheduleItem.create!(day: "thu", title: "Filled", kind: :volunteer, volunteer_capacity: 1)
+    travel_to Date.new(2026, 9, 28) do # mon
+      ScheduleItem.create!(day: "sun", title: "Past empty",   kind: :volunteer, volunteer_capacity: 3)
+      ScheduleItem.create!(day: "mon", title: "Today empty",  kind: :volunteer, volunteer_capacity: 3)
+      ScheduleItem.create!(day: "tue", title: "Future empty", kind: :volunteer, volunteer_capacity: 3)
+      filled = ScheduleItem.create!(day: "mon", title: "Filled", kind: :volunteer, volunteer_capacity: 1)
       filled.plan_items.create!(user: users(:volunteer_one))
 
       sign_in_as users(:jeremy)

@@ -2,7 +2,7 @@ require "test_helper"
 
 class MealSpotRsvpTest < ActiveSupport::TestCase
   def setup
-    @meal = ScheduleItem.create!(day: "thu", title: "Lunch", kind: :meal, is_public: true)
+    @meal = ScheduleItem.create!(day: "mon", title: "Lunch", kind: :meal, is_public: true)
     @spot_a = @meal.meal_spots.create!(name: "Hattie B's", created_by: users(:attendee_one))
     @spot_b = @meal.meal_spots.create!(name: "Pinewood",   created_by: users(:attendee_one))
     @walking_a = @spot_a.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
@@ -48,7 +48,7 @@ class MealSpotRsvpTest < ActiveSupport::TestCase
   end
 
   test "the same user can RSVP to spots for different meals" do
-    other_meal = ScheduleItem.create!(day: "fri", title: "Lunch 2", kind: :meal, is_public: true)
+    other_meal = ScheduleItem.create!(day: "mon", title: "Lunch 2", kind: :meal, is_public: true)
     other_spot = other_meal.meal_spots.create!(name: "Anywhere", created_by: users(:attendee_one))
     other_transport = other_spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
 
@@ -68,7 +68,7 @@ class MealSpotRsvpTest < ActiveSupport::TestCase
   end
 
   test "new RSVP inherits contact_method from user's last RSVP when blank" do
-    other_meal = ScheduleItem.create!(day: "fri", title: "Lunch 2", kind: :meal, is_public: true)
+    other_meal = ScheduleItem.create!(day: "mon", title: "Lunch 2", kind: :meal, is_public: true)
     other_spot = other_meal.meal_spots.create!(name: "Anywhere", created_by: users(:volunteer_one))
     other_transport = other_spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
     other_transport.rsvps.create!(user: users(:volunteer_one), contact_method: "555-existing")
@@ -78,7 +78,7 @@ class MealSpotRsvpTest < ActiveSupport::TestCase
   end
 
   test "new RSVP keeps explicit contact_method when given" do
-    other_meal = ScheduleItem.create!(day: "fri", title: "Lunch 2", kind: :meal, is_public: true)
+    other_meal = ScheduleItem.create!(day: "mon", title: "Lunch 2", kind: :meal, is_public: true)
     other_spot = other_meal.meal_spots.create!(name: "Anywhere", created_by: users(:volunteer_one))
     other_transport = other_spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
     other_transport.rsvps.create!(user: users(:volunteer_one), contact_method: "555-OLD")

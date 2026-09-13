@@ -5,7 +5,8 @@
 #    a different role.
 admin_users = [
   { email: "katyasarmientodev@gmail.com", first_name: "Katya", last_name: "Sarmiento" },
-  { email: "spike@rockymtnruby.dev",      first_name: "Spike", last_name: "" }
+  { email: "mazhak+dev@msn.com",          first_name: "Mazin", last_name: "Hakeem (Dev)"    },
+  { email: "spike@rockymtnruby.dev",      first_name: "Spike", last_name: "Ilacqua"          }
 ]
 
 admin_users.each do |attrs|

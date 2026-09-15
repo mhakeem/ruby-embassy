@@ -3,8 +3,8 @@ require "test_helper"
 class HackProjectsTest < ActionDispatch::IntegrationTest
   setup do
     @hack_day = ScheduleItem.create!(
-      slug: "sat-hackday",
-      day: "sat",
+      slug: ScheduleItem::HACK_DAY_SLUG,
+      day: "tue",
       time_label: "9:00 AM",
       sort_time: 900,
       title: "Hack Day",
@@ -152,7 +152,7 @@ class HackProjectsTest < ActionDispatch::IntegrationTest
 
   test "vic cannot host a project on a non-hack-day schedule item" do
     other = ScheduleItem.create!(
-      slug: "thu-other", day: "thu", time_label: "1pm", sort_time: 1300,
+      slug: "mon-other", day: "mon", time_label: "1pm", sort_time: 1300,
       title: "Other", kind: :community, is_public: true
     )
 

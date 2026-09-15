@@ -4,7 +4,7 @@ class Admin::LightningTalkSignupsControllerTest < ActionDispatch::IntegrationTes
   setup do
     @admin = users(:jeremy)
     @item  = ScheduleItem.create!(
-      day: "fri", title: "Lightning Talks", kind: :lightning,
+      day: "mon", title: "Lightning Talks", kind: :lightning,
       sort_time: 1400, time_label: "2:00 PM", is_public: true
     )
   end

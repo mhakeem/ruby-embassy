@@ -3,7 +3,7 @@ require "test_helper"
 class LightningTalkSignupsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @item = ScheduleItem.create!(
-      day: "fri", title: "Lightning Talks", kind: :lightning,
+      day: "mon", title: "Lightning Talks", kind: :lightning,
       sort_time: 1400, time_label: "2:00 PM", is_public: true
     )
   end

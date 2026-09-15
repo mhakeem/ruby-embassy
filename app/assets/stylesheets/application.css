@@ -1,5 +1,5 @@
 /* ============================================================
- * Ruby Embassy — plain CSS that mirrors the blueridgeruby.com
+ * Ruby Embassy — plain CSS that mirrors the rockymtnruby.dev
  * styling. The HTML uses the same Tailwind-style class names
  * the real site uses, so the markup is copy-paste compatible.
  * Only the specific utilities used on that page are defined.
@@ -99,6 +99,7 @@ code {
 .mx-auto { margin-left: auto; margin-right: auto; }
 
 .mr-0\.5 { margin-right: 0.125rem; }
+.mr-2 { margin-right: 0.5rem; }
 .mt-2 { margin-top: 0.5rem; }
 .mt-4 { margin-top: 1rem; }
 .mb-4 { margin-bottom: 1rem; }
@@ -197,12 +198,8 @@ code {
 
 /* ---------- Page backgrounds (from the real site) --------- */
 
-.bg-ridge {
+.bg-boulder {
   background-color: #ffffff;
-  background-image: url("/images/ridge.jpg");
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  background-position: 50% 100%;
 }
 
 .bg-mountains {
@@ -448,7 +445,7 @@ hr {
 }
 
 
-/* ---------- Schedule day sections (blueridgeruby.com style) -- */
+/* ---------- Schedule day sections (rockymtnruby.dev style) -- */
 
 .schedule-day {
   margin-bottom: 5rem;

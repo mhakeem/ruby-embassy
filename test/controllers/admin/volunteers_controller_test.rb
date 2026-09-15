@@ -9,7 +9,7 @@ class Admin::VolunteersControllerTest < ActionDispatch::IntegrationTest
 
   test "admin sees volunteer list with slot counts" do
     slot = ScheduleItem.create!(
-      day: "fri", title: "Stamp passports",
+      day: "mon", title: "Stamp passports",
       kind: :volunteer, is_public: true, volunteer_capacity: 3
     )
     slot.plan_items.create!(user: users(:volunteer_one))
@@ -22,7 +22,7 @@ class Admin::VolunteersControllerTest < ActionDispatch::IntegrationTest
 
   test "admin show page renders volunteer's slots and assign form" do
     slot = ScheduleItem.create!(
-      day: "fri", title: "Stamp passports",
+      day: "mon", title: "Stamp passports",
       kind: :volunteer, is_public: true, volunteer_capacity: 3
     )
     slot.plan_items.create!(user: users(:volunteer_one))

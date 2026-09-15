@@ -4,7 +4,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @item = ScheduleItem.create!(
       slug: "test-talk",
-      day: "thu",
+      day: "mon",
       title: "Test Talk",
       kind: :talk,
       is_public: true
@@ -71,11 +71,11 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
     plan = user.plan_items.create!(schedule_item: @item)
     plan.update_columns(contact_method: nil)
 
-    blank_other = ScheduleItem.create!(day: "fri", title: "Hike", kind: :activity, is_public: true)
+    blank_other = ScheduleItem.create!(day: "mon", title: "Hike", kind: :activity, is_public: true)
     blank_pi = user.plan_items.create!(schedule_item: blank_other)
     blank_pi.update_columns(contact_method: nil)
 
-    set_other = ScheduleItem.create!(day: "fri", title: "Bike", kind: :activity, is_public: true)
+    set_other = ScheduleItem.create!(day: "mon", title: "Bike", kind: :activity, is_public: true)
     set_pi = user.plan_items.create!(schedule_item: set_other, contact_method: "preset")
 
     patch plan_item_path(plan), params: { plan_item: { contact_method: "Discord: alice" } }
@@ -108,7 +108,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "DELETE on a passport_pickup plan_item is refused (admin-only cancel)" do
     pickup_block = ScheduleItem.create!(
-      day: "sat", title: "Pickup", kind: :embassy, is_public: true,
+      day: "tue", title: "Pickup", kind: :embassy, is_public: true,
       offers_passport_pickup: true, passport_pickup_capacity: 2,
       time_label: "2:00 PM", sort_time: 1400
     )
@@ -125,7 +125,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "attendee POST to a volunteers_only item returns 404 (visibility guard)" do
     hidden = ScheduleItem.create!(
-      slug: "vol-only", day: "fri", title: "Vol-only briefing",
+      slug: "vol-only", day: "mon", title: "Vol-only briefing",
       kind: :volunteer, is_public: true, audience: "volunteers_only",
       volunteer_capacity: 3
     )
@@ -139,7 +139,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "volunteer can RSVP to a volunteers_only item" do
     hidden = ScheduleItem.create!(
-      slug: "vol-only", day: "fri", title: "Vol-only briefing",
+      slug: "vol-only", day: "mon", title: "Vol-only briefing",
       kind: :volunteer, is_public: true, audience: "volunteers_only",
       volunteer_capacity: 3
     )
@@ -166,7 +166,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
   test "DELETE on plan_item with submitted embassy application does NOT destroy" do
     sign_in_as users(:attendee_one)
     embassy_item = ScheduleItem.create!(
-      slug: "embassy-block", day: "sat", title: "Embassy Block",
+      slug: "embassy-block", day: "tue", title: "Embassy Block",
       kind: :embassy, is_public: true, offers_new_passport: true, new_passport_capacity: 10
     )
     plan        = users(:attendee_one).plan_items.create!(schedule_item: embassy_item)
@@ -190,7 +190,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
   test "DELETE on plan_item with submitted embassy application returns 403 turbo_stream" do
     sign_in_as users(:attendee_one)
     embassy_item = ScheduleItem.create!(
-      slug: "embassy-block", day: "sat", title: "Embassy Block",
+      slug: "embassy-block", day: "tue", title: "Embassy Block",
       kind: :embassy, is_public: true, offers_new_passport: true, new_passport_capacity: 10
     )
     plan    = users(:attendee_one).plan_items.create!(schedule_item: embassy_item)
@@ -208,7 +208,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
   test "DELETE on plan_item with draft embassy application DOES destroy" do
     sign_in_as users(:attendee_one)
     embassy_item = ScheduleItem.create!(
-      slug: "embassy-block", day: "sat", title: "Embassy Block",
+      slug: "embassy-block", day: "tue", title: "Embassy Block",
       kind: :embassy, is_public: true, offers_new_passport: true, new_passport_capacity: 10
     )
     plan    = users(:attendee_one).plan_items.create!(schedule_item: embassy_item)
@@ -226,7 +226,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
   test "DELETE on stamping embassy booking (no application) DOES destroy" do
     sign_in_as users(:attendee_one)
     embassy_item = ScheduleItem.create!(
-      slug: "embassy-stamp", day: "sat", title: "Embassy Stamping",
+      slug: "embassy-stamp", day: "tue", title: "Embassy Stamping",
       kind: :embassy, is_public: true, offers_stamping: true, stamping_capacity: 10
     )
     plan = users(:attendee_one).plan_items.create!(schedule_item: embassy_item)
@@ -244,7 +244,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "DELETE on a meal plan_item with an active spot RSVP does NOT destroy" do
     sign_in_as users(:attendee_one)
-    meal = ScheduleItem.create!(slug: "thu-lunch", day: "thu", title: "Open Lunch",
+    meal = ScheduleItem.create!(slug: "mon-lunch", day: "mon", title: "Open Lunch",
                                   kind: :meal, is_public: true)
     spot = meal.meal_spots.create!(name: "Hattie Hot Chicken", created_by: users(:attendee_one))
     transport = spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
@@ -262,7 +262,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "DELETE on a meal plan_item with an active spot RSVP returns 403 turbo_stream" do
     sign_in_as users(:attendee_one)
-    meal = ScheduleItem.create!(slug: "thu-lunch", day: "thu", title: "Open Lunch",
+    meal = ScheduleItem.create!(slug: "mon-lunch", day: "mon", title: "Open Lunch",
                                   kind: :meal, is_public: true)
     spot = meal.meal_spots.create!(name: "Hattie Hot Chicken", created_by: users(:attendee_one))
     transport = spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
@@ -276,7 +276,7 @@ class PlanItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "DELETE on a meal plan_item without an RSVP DOES destroy" do
     sign_in_as users(:attendee_one)
-    meal = ScheduleItem.create!(slug: "thu-lunch", day: "thu", title: "Open Lunch",
+    meal = ScheduleItem.create!(slug: "mon-lunch", day: "mon", title: "Open Lunch",
                                   kind: :meal, is_public: true)
     plan = users(:attendee_one).plan_items.create!(schedule_item: meal)
 

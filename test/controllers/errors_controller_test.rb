@@ -20,7 +20,7 @@ class ErrorsControllerTest < ActionDispatch::IntegrationTest
     get admin_users_path
     assert_response :not_found
     assert_select "h1", text: /Page not found/
-    assert_select "a[href=?]", "https://blueridgeruby.com", text: /Back to main site/
+    assert_select "a[href=?]", "https://rockymtnruby.dev", text: /Back to main site/
     assert_select "a[href=?]", dashboard_path, text: /Back to dashboard/
   end
 

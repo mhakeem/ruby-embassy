@@ -4,7 +4,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   setup do
     @talk = ScheduleItem.create!(
       slug: "test-talk",
-      day: "thu",
+      day: "mon",
       time_label: "10:00 AM",
       sort_time: 1000,
       title: "A Talk About Tests",
@@ -14,7 +14,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
     )
     @activity = ScheduleItem.create!(
       slug: "test-activity",
-      day: "sat",
+      day: "tue",
       time_label: "TBD",
       sort_time: 1000,
       title: "Group Bike Ride",
@@ -24,7 +24,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
     )
     @embassy = ScheduleItem.create!(
       slug: "test-embassy",
-      day: "thu",
+      day: "mon",
       time_label: "9:00 AM",
       sort_time: 900,
       title: "Welcome",
@@ -35,7 +35,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
     )
     @private_item = ScheduleItem.create!(
       slug: "test-private",
-      day: "thu",
+      day: "mon",
       time_label: "7:00 PM",
       sort_time: 1900,
       title: "Secret Dinner",
@@ -81,7 +81,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   test "descriptions render on schedule items when present" do
     ScheduleItem.create!(
       slug: "desc-test",
-      day: "thu",
+      day: "mon",
       time_label: "10:00 AM",
       sort_time: 1000,
       title: "Item with details",
@@ -94,22 +94,22 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
     assert_match "Bring a notebook and questions for the speaker.", response.body
   end
 
-  test "days are rendered in conference order (wed, thu, fri, sat)" do
+  test "days are rendered in conference order (sun, mon, tue)" do
     sign_in_as users(:attendee_one)
     get schedule_path
 
     body = response.body
-    thu_index = body.index("Thursday")
-    sat_index = body.index("Saturday")
-    assert thu_index, "Thursday header should render"
-    assert sat_index, "Saturday header should render"
-    assert thu_index < sat_index, "Thursday should render before Saturday"
+    mon_index = body.index("Monday")
+    tue_index = body.index("Tuesday")
+    assert mon_index, "Monday header should render"
+    assert tue_index, "Tuesday header should render"
+    assert mon_index < tue_index, "Monday should render before Tuesday"
   end
 
   test "attendees do not see volunteers_only items on /schedule" do
     ScheduleItem.create!(
       slug: "volunteer-briefing",
-      day: "fri", time_label: "8:00 AM", sort_time: 800,
+      day: "mon", time_label: "8:00 AM", sort_time: 800,
       title: "Volunteer Briefing",
       kind: :volunteer, is_public: true, audience: "volunteers_only",
       volunteer_capacity: 3
@@ -122,7 +122,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   test "volunteers see volunteers_only items on /schedule" do
     ScheduleItem.create!(
       slug: "volunteer-briefing",
-      day: "fri", time_label: "8:00 AM", sort_time: 800,
+      day: "mon", time_label: "8:00 AM", sort_time: 800,
       title: "Volunteer Briefing",
       kind: :volunteer, is_public: true, audience: "volunteers_only",
       volunteer_capacity: 3
@@ -135,7 +135,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   test "admins see volunteers_only items on /schedule" do
     ScheduleItem.create!(
       slug: "volunteer-briefing",
-      day: "fri", time_label: "8:00 AM", sort_time: 800,
+      day: "mon", time_label: "8:00 AM", sort_time: 800,
       title: "Volunteer Briefing",
       kind: :volunteer, is_public: true, audience: "volunteers_only",
       volunteer_capacity: 3
@@ -205,7 +205,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   # ----- Meal rides summary on /schedule ---------------------------------
 
   test "meal cards on /schedule show 'Suggest a spot' for non-hosted meals with no rides" do
-    ScheduleItem.create!(slug: "thu-lunch", day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    ScheduleItem.create!(slug: "mon-lunch", day: "mon", time_label: "12:00 PM", sort_time: 1200,
                           title: "Open Lunch", kind: :meal, is_public: true)
     sign_in_as users(:attendee_one)
     get schedule_path
@@ -215,11 +215,11 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   end
 
   test "meal cards on /schedule list spots and compact transport info when rides exist" do
-    meal = ScheduleItem.create!(slug: "thu-lunch", day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    meal = ScheduleItem.create!(slug: "mon-lunch", day: "mon", time_label: "12:00 PM", sort_time: 1200,
                                  title: "Open Lunch", kind: :meal, is_public: true)
     spot = meal.meal_spots.create!(name: "Hattie Hot Chicken", created_by: users(:attendee_one),
                                     map_url: "https://maps.app.goo.gl/x")
-    transport = spot.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 4, 30, 12, 15))
+    transport = spot.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 9, 28, 12, 15))
     transport.rsvps.create!(user: users(:attendee_one))
 
     sign_in_as users(:attendee_one)
@@ -234,10 +234,10 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   end
 
   test "meal cards on /schedule hide private spots from non-creators" do
-    meal = ScheduleItem.create!(slug: "thu-lunch", day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    meal = ScheduleItem.create!(slug: "mon-lunch", day: "mon", time_label: "12:00 PM", sort_time: 1200,
                                  title: "Open Lunch", kind: :meal, is_public: true)
     private_spot = meal.meal_spots.create!(name: "Solo bowl", created_by: users(:attendee_one), is_public: false)
-    private_spot.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 4, 30, 12, 0))
+    private_spot.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 9, 28, 12, 0))
 
     sign_in_as users(:volunteer_one)
     get schedule_path
@@ -246,10 +246,10 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   end
 
   test "meal cards on /schedule hide private spots even for the creator" do
-    meal = ScheduleItem.create!(slug: "thu-lunch", day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    meal = ScheduleItem.create!(slug: "mon-lunch", day: "mon", time_label: "12:00 PM", sort_time: 1200,
                                  title: "Open Lunch", kind: :meal, is_public: true)
     private_spot = meal.meal_spots.create!(name: "Solo bowl", created_by: users(:attendee_one), is_public: false)
-    private_spot.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 4, 30, 12, 0))
+    private_spot.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 9, 28, 12, 0))
 
     sign_in_as users(:attendee_one)
     get schedule_path
@@ -257,7 +257,7 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   end
 
   test "hosted meal with canonical spot but no transports shows 'No rides yet' placeholder" do
-    hosted = ScheduleItem.create!(slug: "thu-dinner", day: "thu", time_label: "6:00 PM", sort_time: 1800,
+    hosted = ScheduleItem.create!(slug: "mon-dinner", day: "mon", time_label: "6:00 PM", sort_time: 1800,
                                    title: "Welcome dinner", kind: :meal, is_public: true,
                                    host: "Alice", location: "Pleasant Garden Inn")
     MealSpot.canonical_for_hosted!(hosted)
@@ -269,11 +269,11 @@ class ScheduleBrowsingTest < ActionDispatch::IntegrationTest
   end
 
   test "hosted meal hides the canonical spot's name (already shown as the meal's location)" do
-    hosted = ScheduleItem.create!(slug: "thu-dinner", day: "thu", time_label: "6:00 PM", sort_time: 1800,
+    hosted = ScheduleItem.create!(slug: "mon-dinner", day: "mon", time_label: "6:00 PM", sort_time: 1800,
                                    title: "Welcome dinner", kind: :meal, is_public: true,
                                    host: "Alice", location: "Pleasant Garden Inn")
     canonical = MealSpot.canonical_for_hosted!(hosted)
-    transport = canonical.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 4, 30, 18, 0))
+    transport = canonical.transports.create!(mode: :walking, departs_at: Time.zone.local(2026, 9, 28, 18, 0))
     transport.rsvps.create!(user: users(:attendee_one))
 
     sign_in_as users(:attendee_one)

@@ -34,7 +34,7 @@ module Admin
 
     def new
       requested_kind = ScheduleItem.kinds.key?(params[:kind].to_s) ? params[:kind] : :talk
-      @schedule_item = ScheduleItem.new(day: "fri", kind: requested_kind, is_public: true, flexible: false)
+      @schedule_item = ScheduleItem.new(day: "mon", kind: requested_kind, is_public: true, flexible: false)
     end
 
     def create

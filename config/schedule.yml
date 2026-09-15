@@ -1,239 +1,215 @@
 ---
-# Blue Ridge Ruby 2025 conference schedule.
+# Rocky Mountain Ruby 2026 conference schedule.
 # Item kinds: talk, lightning, embassy, activity, reception, meal, community, volunteer
 # `flexible: true` renders the item with a dashed/TBD treatment.
-# Mirrors https://blueridgeruby.com/schedule — keep in sync if the public schedule changes.
+# `is_public: false` hides an item from the public /schedule (admins/volunteers still
+# see it) while still letting the schedule-item row exist for admin-only features
+# (e.g. Hack Day/Hack Projects) to hang off. Defaults to true when omitted.
+# Sessions sourced from the live Sessionize schedule (https://rockymtnruby.dev/schedule/,
+# embed xxmulsug) fetched 2026-09-13. Speakers have no individual profile pages on the
+# RMR site, so `host_url` is intentionally omitted — names render as plain text.
 
 :days:
-  - :anchor: wed
-    :date: "April 29"
-    :label: "Wednesday"
+  - :anchor: sun
+    :date: "September 27"
+    :label: "Sunday"
     :subtitle: "Pre-Conference"
     :items:
-      - :id: wed-meetup
+      - :id: sun-meetup
         :time: "7:00 PM"
         :sort_time: 1900
-        :title: "Pre-Conference Meetup"
+        :title: "Pre-Conference Meetup (TBD)"
         :type: community
-        :location: "Wicked Weed Brew Pub"
-        :map_url: "https://maps.app.goo.gl/GJAhmx5Udz1FiitP8"
-        :description: "We'll probably try to find a spot for all of us in the beer garden downstairs in the back."
+        :flexible: true
+        :is_public: false
+        :description: "Placeholder — not yet on the published RMR schedule. Confirm venue/time and flip to public before announcing."
 
-  - :anchor: thu
-    :date: "April 30"
-    :label: "Thursday"
+  - :anchor: mon
+    :date: "September 28"
+    :label: "Monday"
     :subtitle: "Conference Day 1"
     :items:
-      - :id: thu-registration
+      - :id: mon-checkin
         :time: "8:00 AM"
         :sort_time: 800
-        :title: "Registration, Coffee, Light Snacks"
+        :title: "Check-In & Breakfast"
         :type: reception
-      - :id: thu-welcome
+        :location: "eTown Hall"
+        :map_url: "https://www.google.com/maps/search/?api=1&query=eTown+Hall+1535+Spruce+St+Boulder+CO+80302"
+      - :id: mon-opening
         :time: "9:00 AM"
         :sort_time: 900
-        :title: "Welcome, Day 1"
+        :title: "Day One Opening"
         :type: reception
-      - :id: thu-talk-1
-        :time: "9:30 AM"
-        :sort_time: 930
-        :host: "John Athayde"
-        :host_url: "https://blueridgeruby.com/speakers/john-athayde/"
-        :title: "Learning from Permaculture: Sustainable Software Development"
+      - :id: mon-talk-1
+        :time: "9:15 AM"
+        :sort_time: 915
+        :host: "Kevin Murphy"
+        :title: "InstiLLMent of Successful Practices in an Agentic World"
         :type: talk
-      - :id: thu-break-1
-        :time: "10:00 AM"
-        :sort_time: 1000
+      - :id: mon-talk-2
+        :time: "9:50 AM"
+        :sort_time: 950
+        :host: "Sonja Peterson"
+        :title: "Confident On-Call: Building Incident Response Skills as a Ruby Engineer"
+        :type: talk
+      - :id: mon-break-1
+        :time: "10:25 AM"
+        :sort_time: 1025
         :title: "Break"
         :type: reception
-      - :id: thu-talk-2
-        :time: "10:30 AM"
-        :sort_time: 1030
-        :host: "Joël Quenneville"
-        :host_url: "https://blueridgeruby.com/speakers/joel-quenneville/"
-        :title: "State is the First Decision You Never Made"
+      - :id: mon-talk-3
+        :time: "10:55 AM"
+        :sort_time: 1055
+        :host: "Joel Hawksley"
+        :title: "Beyond Senior: Consider the staff path!"
         :type: talk
-      - :id: thu-break-2
-        :time: "11:00 AM"
-        :sort_time: 1100
-        :title: "Break"
-        :type: reception
-      - :id: thu-talk-3
+      - :id: mon-talk-4
         :time: "11:30 AM"
         :sort_time: 1130
-        :host: "Ifat Ribon"
-        :host_url: "https://blueridgeruby.com/speakers/ifat-ribon/"
-        :title: "Yes, &…: Ruby's Secret Talent for Improvisation"
+        :host: "Nicolas Erlichman"
+        :title: "Modeling Class Hierarchies in Active Record"
         :type: talk
-      - :id: thu-lunch
+      - :id: mon-lunch
         :time: "12:00 PM"
         :sort_time: 1200
-        :title: "Open Lunch"
+        :title: "Lunch"
         :type: meal
         :description: "(Coordinate on Slack)"
-      - :id: thu-mystery
+      - :id: mon-talk-5
         :time: "2:00 PM"
         :sort_time: 1400
-        :title: "Mystery Activity 👀"
+        :host: "Fernando Perales"
+        :title: "Slowly We Rot: signs of a Rails app's decay"
+        :type: talk
+      - :id: mon-talk-6
+        :time: "2:35 PM"
+        :sort_time: 1435
+        :host: "Ben Reubenstein"
+        :title: "Commit for Good"
+        :type: talk
+      - :id: mon-break-2
+        :time: "3:05 PM"
+        :sort_time: 1505
+        :title: "Break"
+        :type: reception
+      - :id: mon-talk-7
+        :time: "3:35 PM"
+        :sort_time: 1535
+        :host: "Drew Bragg"
+        :title: "Your own AI Agent in ~400 lines of Ruby"
+        :type: talk
+      - :id: mon-talk-8
+        :time: "4:10 PM"
+        :sort_time: 1610
+        :host: "Travis Turner"
+        :title: "Got AI ontological shock? No worries: UFOs, Theology, and Psychedelics with Ruby-Colored Reverence"
+        :type: talk
+      - :id: mon-happy-hour
+        :time: "5:00 PM"
+        :sort_time: 1700
+        :title: "Game & Craft Happy Hour"
         :type: community
-      - :id: thu-break-3
+        :location: "eTown Hall"
+
+  - :anchor: tue
+    :date: "September 29"
+    :label: "Tuesday"
+    :subtitle: "Conference Day 2"
+    :items:
+      - :id: tue-checkin
+        :time: "8:00 AM"
+        :sort_time: 800
+        :title: "Check-In & Breakfast"
+        :type: reception
+        :location: "eTown Hall"
+        :map_url: "https://www.google.com/maps/search/?api=1&query=eTown+Hall+1535+Spruce+St+Boulder+CO+80302"
+      - :id: tue-opening
+        :time: "9:00 AM"
+        :sort_time: 900
+        :title: "Day Two Opening"
+        :type: reception
+      - :id: tue-talk-1
+        :time: "9:15 AM"
+        :sort_time: 915
+        :host: "Marco Roth"
+        :title: "Herb in Rails 8.2: Your ERB views, now HTML-aware"
+        :type: talk
+      - :id: tue-talk-2
+        :time: "9:50 AM"
+        :sort_time: 950
+        :host: "Andrea Fomera"
+        :title: "High-Octane Onboarding: Ramping into a Rails Codebase with AI Agents"
+        :type: talk
+      - :id: tue-break-1
+        :time: "10:25 AM"
+        :sort_time: 1025
+        :title: "Break"
+        :type: reception
+      - :id: tue-talk-3
+        :time: "10:55 AM"
+        :sort_time: 1055
+        :host: "Christine Seeman"
+        :title: "Optimize Your Mindset (Without Overclocking)"
+        :type: talk
+      - :id: tue-talk-4
+        :time: "11:30 AM"
+        :sort_time: 1130
+        :host: "Giovanni Panasiti"
+        :title: "Building an Agentic RAG in the Rails Way with RubyLLM"
+        :type: talk
+      - :id: tue-lunch
+        :time: "12:00 PM"
+        :sort_time: 1200
+        :title: "Lunch"
+        :type: meal
+        :description: "(Coordinate on Slack)"
+      - :id: tue-talk-5
+        :time: "2:00 PM"
+        :sort_time: 1400
+        :host: "Ifat Ribon"
+        :title: "Fewer Tests, More Confidence: A Rails Testing Philosophy for the AI Era"
+        :type: talk
+      - :id: tue-break-2
         :time: "2:30 PM"
         :sort_time: 1430
         :title: "Break"
         :type: reception
-      - :id: thu-talk-4
-        :time: "3:00 PM"
-        :sort_time: 1500
-        :host: "Annie Kiley"
-        :host_url: "https://blueridgeruby.com/speakers/annie-kiley/"
-        :title: "How To Finish What You Start: Lessons From Actually Shipping a Big Refactor"
-        :type: talk
-      - :id: thu-break-4
-        :time: "3:30 PM"
-        :sort_time: 1530
-        :title: "Break"
-        :type: reception
-      - :id: thu-talk-5
-        :time: "4:00 PM"
-        :sort_time: 1600
-        :host: "Kevin Murphy"
-        :host_url: "https://blueridgeruby.com/speakers/kevin-murphy/"
-        :title: "InstiLLment of Successful Practices in an Agentic World"
-        :type: talk
-      - :id: thu-closing
-        :time: "4:30 PM"
-        :sort_time: 1630
-        :title: "Closing, Day 1"
-        :type: reception
-      - :id: thu-dinner
-        :time: "5:00 PM"
-        :sort_time: 1700
-        :title: "Open Dinner"
-        :type: meal
-        :description: "(Coordinate on Slack)"
-      - :id: thu-roundtable
-        :time: "7:00 PM"
-        :sort_time: 1900
-        :title: "Roundtable Discussion"
-        :type: community
-        :location: "YMI Cultural Center"
-
-  - :anchor: fri
-    :date: "May 1"
-    :label: "Friday"
-    :subtitle: "Conference Day 2"
-    :items:
-      - :id: fri-coffee
-        :time: "8:00 AM"
-        :sort_time: 800
-        :title: "Coffee, Light Snacks"
-        :type: reception
-      - :id: fri-welcome
-        :time: "9:00 AM"
-        :sort_time: 900
-        :title: "Welcome, Day 2"
-        :type: reception
-      - :id: fri-talk-1
-        :time: "9:30 AM"
-        :sort_time: 930
-        :host: "Brooke Kuhlmann"
-        :host_url: "https://blueridgeruby.com/speakers/brooke-kuhlmann/"
-        :title: "Terminus: A Hanami + htmx web application for e-ink devices"
-        :type: talk
-      - :id: fri-break-1
-        :time: "10:00 AM"
-        :sort_time: 1000
-        :title: "Break"
-        :type: reception
-      - :id: fri-talk-2
-        :time: "10:30 AM"
-        :sort_time: 1030
-        :host: "Rachael Wright-Munn"
-        :host_url: "https://blueridgeruby.com/speakers/rachael-wright-munn/"
-        :title: "Your First Open-Source Contribution"
-        :type: talk
-      - :id: fri-break-2
-        :time: "11:00 AM"
-        :sort_time: 1100
-        :title: "Break"
-        :type: reception
-      - :id: fri-talk-3
-        :time: "11:30 AM"
-        :sort_time: 1130
-        :host: "David Paluy"
-        :host_url: "https://blueridgeruby.com/speakers/david-paluy/"
-        :title: "LLM Telemetry as a First-Class Rails Concern"
-        :type: talk
-      - :id: fri-lunch
-        :time: "12:00 PM"
-        :sort_time: 1200
-        :title: "Open Lunch"
-        :type: meal
-        :description: "(Coordinate on Slack)"
-      - :id: fri-lightning
-        :time: "2:00 PM"
-        :sort_time: 1400
+      - :id: tue-lightning
+        :time: "2:45 PM"
+        :sort_time: 1445
         :title: "Lightning Talks"
         :type: lightning
-        :description: "8–10 Total"
-      - :id: fri-break-3
-        :time: "3:00 PM"
-        :sort_time: 1500
+      - :id: tue-break-3
+        :time: "3:45 PM"
+        :sort_time: 1545
         :title: "Break"
         :type: reception
-      - :id: fri-talk-4
-        :time: "3:30 PM"
-        :sort_time: 1530
-        :host: "Christine Seeman"
-        :host_url: "https://blueridgeruby.com/speakers/christine-seeman/"
-        :title: "Optimize Your Mindset (Without Overclocking)"
+      - :id: tue-talk-6
+        :time: "4:15 PM"
+        :sort_time: 1615
+        :host: "Alan Ridlehoover"
+        :title: "Indispensable: What Human Programmers Can Learn from Human Computers"
         :type: talk
-      - :id: fri-break-4
-        :time: "4:00 PM"
-        :sort_time: 1600
-        :title: "Break"
+      - :id: tue-closing
+        :time: "4:50 PM"
+        :sort_time: 1650
+        :title: "Closing Session"
         :type: reception
-      - :id: fri-talk-5
-        :time: "4:30 PM"
-        :sort_time: 1630
-        :host: "Thomas Cannon"
-        :host_url: "https://blueridgeruby.com/speakers/thomas-cannon/"
-        :title: "5 ways to invest in yourself for the long haul"
-        :type: talk
-      - :id: fri-closing
+      - :id: tue-hackday
         :time: "5:00 PM"
         :sort_time: 1700
-        :title: "Closing, Day 2"
-        :type: reception
-      - :id: fri-dinner
-        :time: "5:30 PM"
-        :sort_time: 1730
-        :title: "Open Dinner"
-        :type: meal
-        :description: "(Coordinate on Slack)"
-      - :id: fri-afterparty
-        :time: "8:00 PM"
-        :sort_time: 2000
-        :title: "Afterparty"
-        :type: community
-        :location: "Burial Beer Co. South Slope"
-
-  - :anchor: sat
-    :date: "May 2"
-    :label: "Saturday"
-    :subtitle: "Hack Day & Ruby Embassy"
-    :items:
-      - :id: sat-hackday
-        :time: "9:00 AM"
-        :sort_time: 900
         :title: "Hack Day"
         :type: community
-        :location: "YMI Cultural Center"
-        :description: "Hack on projects, or just come and hang out! (Ends at 4:00 PM)"
-      - :id: sat-dinner
-        :time: "5:00 PM"
-        :sort_time: 1700
-        :title: "Informal Dinner"
-        :type: activity
-        :location: "Asheville Pizza South Slope"
-        :description: "For those still in town, let's get dinner one last time!"
+        :flexible: true
+        :is_public: false
+        :description: "Placeholder — not on the published RMR schedule. Kept non-public so admin Hack Projects still works; flip to public if organizers decide to run it."
+      - :id: tue-volunteers
+        :time: "8:00 AM"
+        :sort_time: 800
+        :title: "Registration & Check-In Volunteers"
+        :type: volunteer
+        :volunteer_capacity: 4
+        :flexible: true
+        :is_public: false
+        :description: "Placeholder volunteer slot — not yet confirmed with organizers."

@@ -4,7 +4,7 @@ class ScheduleItemsControllerTest < ActionDispatch::IntegrationTest
   def valid_form_params(overrides = {})
     {
       schedule_item: {
-        day: "sat",
+        day: "mon",
         time_label: "6:00 PM",
         sort_time: 1800,
         title: "Dinner with crew",
@@ -49,11 +49,11 @@ class ScheduleItemsControllerTest < ActionDispatch::IntegrationTest
   test "Turbo Stream create appends item to day container and resets the form frame" do
     sign_in_as users(:attendee_one)
     post schedule_items_path,
-         params: valid_form_params(day: "sat", title: "Turbo Dinner", is_public: false),
+         params: valid_form_params(day: "mon", title: "Turbo Dinner", is_public: false),
          headers: { "Accept" => "text/vnd.turbo-stream.html" }
     assert_response :success
-    assert_match %r{<turbo-stream action="replace" target="plan_items_sat">}, response.body
-    assert_match %r{<turbo-stream action="replace" target="new_schedule_item_sat">}, response.body
+    assert_match %r{<turbo-stream action="replace" target="plan_items_mon">}, response.body
+    assert_match %r{<turbo-stream action="replace" target="new_schedule_item_mon">}, response.body
     assert_match "Turbo Dinner", response.body
   end
 
@@ -76,7 +76,7 @@ class ScheduleItemsControllerTest < ActionDispatch::IntegrationTest
   test "attendee can update their own item but kind stays activity" do
     sign_in_as users(:attendee_one)
     item = users(:attendee_one).created_schedule_items.create!(
-      day: "thu", title: "Mine", kind: :activity, is_public: true
+      day: "mon", title: "Mine", kind: :activity, is_public: true
     )
 
     patch schedule_item_path(item), params: valid_form_params(title: "Updated", kind: "talk")
@@ -87,7 +87,7 @@ class ScheduleItemsControllerTest < ActionDispatch::IntegrationTest
 
   test "attendee gets 404 editing another user's item" do
     other_item = users(:volunteer_one).created_schedule_items.create!(
-      day: "thu", title: "Not yours", kind: :activity, is_public: true
+      day: "mon", title: "Not yours", kind: :activity, is_public: true
     )
 
     sign_in_as users(:attendee_one)
@@ -102,7 +102,7 @@ class ScheduleItemsControllerTest < ActionDispatch::IntegrationTest
   test "DELETE route does not exist" do
     sign_in_as users(:attendee_one)
     item = users(:attendee_one).created_schedule_items.create!(
-      day: "thu", title: "Mine", kind: :activity, is_public: true
+      day: "mon", title: "Mine", kind: :activity, is_public: true
     )
 
     delete "/schedule_items/#{item.id}"

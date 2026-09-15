@@ -3,8 +3,8 @@ require "test_helper"
 class PlanTest < ActionDispatch::IntegrationTest
   setup do
     @talk = ScheduleItem.create!(
-      slug: "thu-plan-talk",
-      day: "thu",
+      slug: "mon-plan-talk",
+      day: "mon",
       time_label: "10:00 AM",
       sort_time: 1000,
       title: "Planned Talk",
@@ -13,8 +13,8 @@ class PlanTest < ActionDispatch::IntegrationTest
       is_public: true
     )
     @activity = ScheduleItem.create!(
-      slug: "sat-plan-act",
-      day: "sat",
+      slug: "tue-plan-act",
+      day: "tue",
       time_label: "2:00 PM",
       sort_time: 1400,
       title: "Planned Activity",
@@ -45,16 +45,16 @@ class PlanTest < ActionDispatch::IntegrationTest
 
   test "/plan orders items by day then sort_time" do
     alice = users(:attendee_one)
-    alice.plan_items.create!(schedule_item: @activity) # Saturday
-    alice.plan_items.create!(schedule_item: @talk)     # Thursday
+    alice.plan_items.create!(schedule_item: @activity) # Tuesday
+    alice.plan_items.create!(schedule_item: @talk)     # Monday
 
     sign_in_as alice
     get plan_path
 
-    thu_idx = response.body.index("Planned Talk")
-    sat_idx = response.body.index("Planned Activity")
-    assert thu_idx && sat_idx
-    assert thu_idx < sat_idx, "Thursday item should appear before Saturday item"
+    mon_idx = response.body.index("Planned Talk")
+    tue_idx = response.body.index("Planned Activity")
+    assert mon_idx && tue_idx
+    assert mon_idx < tue_idx, "Monday item should appear before Tuesday item"
   end
 
   test "/plan shows notes for plan_items that have them" do
@@ -70,7 +70,7 @@ class PlanTest < ActionDispatch::IntegrationTest
   test "/plan shows item descriptions when present" do
     alice = users(:attendee_one)
     item = ScheduleItem.create!(
-      day: "fri",
+      day: "mon",
       time_label: "2:00 PM",
       sort_time: 1400,
       title: "Planned Item With Description",
@@ -87,7 +87,7 @@ class PlanTest < ActionDispatch::IntegrationTest
 
   test "/plan meal cards show 'Get or host a ride' when no transports exist" do
     alice = users(:attendee_one)
-    meal  = ScheduleItem.create!(day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    meal  = ScheduleItem.create!(day: "mon", time_label: "12:00 PM", sort_time: 1200,
                                   title: "Open Lunch", kind: :meal, is_public: true)
     alice.plan_items.create!(schedule_item: meal)
 
@@ -98,7 +98,7 @@ class PlanTest < ActionDispatch::IntegrationTest
 
   test "/plan meal cards count transports, not spots — hosted meal with canonical spot but no transport" do
     alice = users(:attendee_one)
-    hosted = ScheduleItem.create!(day: "thu", time_label: "6:00 PM", sort_time: 1800,
+    hosted = ScheduleItem.create!(day: "mon", time_label: "6:00 PM", sort_time: 1800,
                                    title: "Welcome dinner", kind: :meal, is_public: true,
                                    host: "Alice", location: "Pleasant Garden Inn")
     MealSpot.canonical_for_hosted!(hosted)
@@ -112,7 +112,7 @@ class PlanTest < ActionDispatch::IntegrationTest
 
   test "/plan hides the remove × button on a meal once the user has a spot RSVP" do
     alice = users(:attendee_one)
-    meal  = ScheduleItem.create!(day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    meal  = ScheduleItem.create!(day: "mon", time_label: "12:00 PM", sort_time: 1200,
                                   title: "Open Lunch", kind: :meal, is_public: true)
     spot  = meal.meal_spots.create!(name: "Hattie Hot Chicken", created_by: alice)
     transport = spot.transports.create!(mode: :walking, departs_at: 1.hour.from_now)
@@ -127,7 +127,7 @@ class PlanTest < ActionDispatch::IntegrationTest
 
   test "/plan still shows the remove × button on a meal when the user has no spot RSVP" do
     alice = users(:attendee_one)
-    meal  = ScheduleItem.create!(day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    meal  = ScheduleItem.create!(day: "mon", time_label: "12:00 PM", sort_time: 1200,
                                   title: "Open Lunch", kind: :meal, is_public: true)
     alice.plan_items.create!(schedule_item: meal)
 
@@ -140,13 +140,13 @@ class PlanTest < ActionDispatch::IntegrationTest
 
   test "/plan meal cards show the user's spot details when RSVPd" do
     alice = users(:attendee_one)
-    meal  = ScheduleItem.create!(day: "thu", time_label: "12:00 PM", sort_time: 1200,
+    meal  = ScheduleItem.create!(day: "mon", time_label: "12:00 PM", sort_time: 1200,
                                   title: "Open Lunch", kind: :meal, is_public: true)
     spot  = meal.meal_spots.create!(name: "Hattie Hot Chicken", created_by: alice,
                                      map_url: "https://maps.app.goo.gl/x",
                                      meet_up_spot: "hotel lobby",
                                      contact_info: "DM Alice on Slack")
-    transport = spot.transports.create!(mode: :driving, departs_at: Time.zone.local(2026, 4, 30, 12, 15), seats_offered: 3)
+    transport = spot.transports.create!(mode: :driving, departs_at: Time.zone.local(2026, 9, 28, 12, 15), seats_offered: 3)
     transport.rsvps.create!(user: alice)
 
     sign_in_as alice
@@ -176,7 +176,7 @@ class PlanTest < ActionDispatch::IntegrationTest
   test "/plan shows yellow Processing badge on embassy card while application is submitted but not yet ready" do
     alice = users(:attendee_one)
     passport_block = ScheduleItem.create!(
-      day: "thu", time_label: "9:00 AM", sort_time: 900,
+      day: "mon", time_label: "9:00 AM", sort_time: 900,
       title: "Passport Block", kind: :embassy, is_public: true,
       offers_new_passport: true, new_passport_capacity: 4
     )
@@ -202,7 +202,7 @@ class PlanTest < ActionDispatch::IntegrationTest
   test "/plan shows green READY badge on embassy card once application.ready_at is set" do
     alice = users(:attendee_one)
     passport_block = ScheduleItem.create!(
-      day: "thu", time_label: "9:00 AM", sort_time: 900,
+      day: "mon", time_label: "9:00 AM", sort_time: 900,
       title: "Passport Block", kind: :embassy, is_public: true,
       offers_new_passport: true, new_passport_capacity: 4
     )
@@ -230,7 +230,7 @@ class PlanTest < ActionDispatch::IntegrationTest
   test "/plan shows Received badge on embassy card once passport_received_at is set" do
     alice = users(:attendee_one)
     passport_block = ScheduleItem.create!(
-      day: "thu", time_label: "9:00 AM", sort_time: 900,
+      day: "mon", time_label: "9:00 AM", sort_time: 900,
       title: "Passport Block", kind: :embassy, is_public: true,
       offers_new_passport: true, new_passport_capacity: 4
     )

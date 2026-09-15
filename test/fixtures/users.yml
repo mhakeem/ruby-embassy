@@ -11,9 +11,9 @@ volunteer_one:
   role: 1
 
 jeremy:
-  email: jeremy@blueridgeruby.com
-  first_name: Jeremy
-  last_name: Smith
+  email: admin_one@example.com
+  first_name: Admin
+  last_name: One
   role: 2
 
 katya:

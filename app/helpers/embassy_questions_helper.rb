@@ -19,8 +19,8 @@ module EmbassyQuestionsHelper
   ].freeze
 
   EMBASSY_HOURS = [
-    "Thursday, April 30 · 9:00 AM – 4:30 PM",
-    "Friday, May 1 · 9:00 AM – 5:00 PM"
+    "Monday, September 28 · 9:00 AM – 4:30 PM",
+    "Tuesday, September 29 · 9:00 AM – 5:00 PM"
   ].freeze
 
   SECTION_META = {

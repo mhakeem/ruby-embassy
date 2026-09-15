@@ -2,7 +2,7 @@ require "test_helper"
 
 class PlanItemTest < ActiveSupport::TestCase
   def build_schedule_item
-    ScheduleItem.create!(day: "thu", title: "Some Item", kind: :activity, is_public: true)
+    ScheduleItem.create!(day: "mon", title: "Some Item", kind: :activity, is_public: true)
   end
 
   test "belongs_to user and schedule_item" do
@@ -35,7 +35,7 @@ class PlanItemTest < ActiveSupport::TestCase
 
   test "cannot create plan_item for a full volunteer slot" do
     slot = ScheduleItem.create!(
-      day: "thu", title: "Stamp passports",
+      day: "mon", title: "Stamp passports",
       kind: :volunteer, is_public: true, volunteer_capacity: 1
     )
     PlanItem.create!(user: users(:volunteer_one), schedule_item: slot)
@@ -47,7 +47,7 @@ class PlanItemTest < ActiveSupport::TestCase
 
   test "non-full volunteer slot accepts a signup" do
     slot = ScheduleItem.create!(
-      day: "thu", title: "Stamp passports",
+      day: "mon", title: "Stamp passports",
       kind: :volunteer, is_public: true, volunteer_capacity: 2
     )
     plan = PlanItem.new(user: users(:volunteer_one), schedule_item: slot)
@@ -69,7 +69,7 @@ class PlanItemTest < ActiveSupport::TestCase
     earlier = build_schedule_item
     user.plan_items.create!(schedule_item: earlier, contact_method: "Discord: alice#0001")
 
-    later = ScheduleItem.create!(day: "fri", title: "Other", kind: :activity, is_public: true)
+    later = ScheduleItem.create!(day: "mon", title: "Other", kind: :activity, is_public: true)
     plan = user.plan_items.create!(schedule_item: later)
     assert_equal "Discord: alice#0001", plan.contact_method
   end

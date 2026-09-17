@@ -82,9 +82,18 @@ automatically in development and test, nothing to source by hand).
 | `SOLID_QUEUE_IN_PUMA` | auto-on | **Required** |
 | `APP_HOST` | not needed | **Required** |
 | `POSTMARK_API_TOKEN` | not needed | **Required** |
+| `MAIL_PROVIDER` | not needed | optional (`postmark` default, or `brevo`) |
+| `BREVO_API_KEY` | not needed | required only if `MAIL_PROVIDER=brevo` |
 | `MISSION_CONTROL_USER` / `MISSION_CONTROL_PASSWORD` | optional | **Required** |
 | `TITO_API_TOKEN` / `TITO_ACCOUNT_SLUG` / `TITO_EVENT_SLUG` | optional | **Required** |
 | `RAILS_LOG_LEVEL`, `WEB_CONCURRENCY` | optional | optional |
+
+### Switching email providers
+
+Postmark is the default. To fail over to Brevo (a backup transactional provider, see
+`LOCAL_DEV_NOTES.md` for why it's an API integration rather than SMTP), set
+`MAIL_PROVIDER=brevo` and `BREVO_API_KEY` on Railway and redeploy. No code change needed to
+switch back — remove `MAIL_PROVIDER` or set it back to `postmark`.
 
 ## Production / Railway deploy
 

@@ -147,4 +147,45 @@ class Admin::UsersControllerTest < ActionDispatch::IntegrationTest
     # state since this user has no non-embassy plan items.
     assert_match "Nothing else planned", response.body
   end
+
+  test "attendee POST /admin/users/sync returns 404" do
+    sign_in_as users(:attendee_one)
+    post sync_admin_users_path
+    assert_response :not_found
+  end
+
+  test "admin POST /admin/users/sync enqueues TitoSyncJob and redirects immediately" do
+    sign_in_as users(:jeremy)
+
+    assert_enqueued_with(job: TitoSyncJob) do
+      post sync_admin_users_path
+    end
+
+    assert_redirected_to admin_users_path
+    assert_equal "Sync started.", flash[:notice]
+    assert_equal :running, TitoSyncJob.status[:state]
+  end
+
+  test "admin POST /admin/users/sync while already running is refused" do
+    sign_in_as users(:jeremy)
+    TitoSyncJob.mark_running!
+
+    assert_no_enqueued_jobs do
+      post sync_admin_users_path
+    end
+
+    assert_redirected_to admin_users_path
+    assert_equal "A sync is already running.", flash[:alert]
+  end
+
+  test "admin POST /admin/users/sync allows re-enqueueing once the running status is stale" do
+    sign_in_as users(:jeremy)
+    Rails.cache.write(TitoSyncJob::CACHE_KEY, { state: :running, started_at: 1.hour.ago })
+
+    assert_enqueued_with(job: TitoSyncJob) do
+      post sync_admin_users_path
+    end
+
+    assert_equal "Sync started.", flash[:notice]
+  end
 end

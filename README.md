@@ -84,16 +84,22 @@ automatically in development and test, nothing to source by hand).
 | `POSTMARK_API_TOKEN` | not needed | **Required** |
 | `MAIL_PROVIDER` | not needed | optional (`postmark` default, or `brevo`) |
 | `BREVO_API_KEY` | not needed | required only if `MAIL_PROVIDER=brevo` |
+| `MAIL_FROM_ADDRESS` | not needed | optional, defaults to `noreply@rockymtnruby.dev` |
 | `MISSION_CONTROL_USER` / `MISSION_CONTROL_PASSWORD` | optional | **Required** |
 | `TITO_API_TOKEN` / `TITO_ACCOUNT_SLUG` / `TITO_EVENT_SLUG` | optional | **Required** |
 | `RAILS_LOG_LEVEL`, `WEB_CONCURRENCY` | optional | optional |
 
 ### Switching email providers
 
-Postmark is the default. To fail over to Brevo (a backup transactional provider, see
-`LOCAL_DEV_NOTES.md` for why it's an API integration rather than SMTP), set
-`MAIL_PROVIDER=brevo` and `BREVO_API_KEY` on Railway and redeploy. No code change needed to
-switch back — remove `MAIL_PROVIDER` or set it back to `postmark`.
+`MAIL_PROVIDER` selects Postmark (`postmark`, the default when unset) or Brevo (`brevo`) —
+either can be primary or backup, there's nothing structurally special about either one. Set
+`MAIL_PROVIDER` and the matching provider's API key/token on Railway and redeploy; no code
+change needed either direction.
+
+The sender address (`MAIL_FROM_ADDRESS`, defaults to `noreply@rockymtnruby.dev`) is
+independent of which provider is active. Whichever address you use must be verified with
+whichever provider is currently selected — an unverified sender gets rejected by that
+provider's API.
 
 ## Production / Railway deploy
 

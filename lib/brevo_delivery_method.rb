@@ -1,30 +1,28 @@
 # ActionMailer delivery method for Brevo's transactional email API.
 #
-# Brevo's SMTP relay requires a separate, manual activation from their support
-# team on new accounts (confirmed 2026-09: it silently accepts and drops mail
-# instead of raising, so testing via SMTP looked successful but nothing sent).
-# The API has no such gate, so this wraps Brevo::TransactionalEmailsApi
-# directly rather than waiting on that activation. See LOCAL_DEV_NOTES.md.
-#
 # Registered via ActionMailer::Base.add_delivery_method in
 # config/environments/production.rb, selected via MAIL_PROVIDER=brevo.
 class BrevoDeliveryMethod
   attr_accessor :settings
 
-  def initialize(settings)
+  def initialize(settings, api_client: nil)
     @settings = settings
+    @api_client = api_client
   end
 
   def deliver!(mail)
     Brevo.configure { |config| config.api_key["api-key"] = settings.fetch(:api_key) }
 
-    api_instance = Brevo::TransactionalEmailsApi.new
+    api_instance = @api_client || Brevo::TransactionalEmailsApi.new
+    # Brevo::SendSmtpEmail#initialize keys its incoming hash by the JSON
+    # (camelCase) names, not the snake_case Ruby attribute names its
+    # accessors expose — confirmed by reading the gem source directly.
     send_smtp_email = Brevo::SendSmtpEmail.new(
       sender: sender_for(mail),
       to: recipients_for(mail),
       subject: mail.subject,
-      html_content: part_body(mail, :html),
-      text_content: part_body(mail, :text)
+      htmlContent: part_body(mail, :html),
+      textContent: part_body(mail, :text)
     )
 
     api_instance.send_transac_email(send_smtp_email)
@@ -45,8 +43,9 @@ class BrevoDeliveryMethod
   end
 
   def part_body(mail, kind)
-    content_type_fragment = kind == :html ? "html" : "plain"
-    part = mail.multipart? ? mail.parts.find { |p| p.content_type.to_s.include?(content_type_fragment) } : mail
-    part&.body&.decoded
+    return mail.body.decoded unless mail.multipart?
+
+    mime_type = kind == :html ? "text/html" : "text/plain"
+    mail.all_parts.find { |p| p.mime_type == mime_type }&.body&.decoded
   end
 end

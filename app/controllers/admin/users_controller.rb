@@ -70,6 +70,10 @@ module Admin
 
     def create
       @user = User.new(user_params)
+      # Locks the role against TitoSyncJob's auto-promotion. An admin
+      # explicitly choosing a role here — even the default — is a
+      # deliberate decision the sync should never override.
+      @user.role_set_by_admin = true if @user.role_changed?
 
       if @user.save(context: :interactive)
         redirect_to admin_users_path, notice: "User added."
@@ -85,6 +89,9 @@ module Admin
     def update
       @user = User.find(params[:id])
       @user.assign_attributes(user_params)
+      # See the same line in #create — an admin changing role here locks it
+      # against TitoSyncJob's auto-promotion.
+      @user.role_set_by_admin = true if @user.role_changed?
 
       if @user.save(context: :interactive)
         redirect_to admin_users_path, notice: "User updated."

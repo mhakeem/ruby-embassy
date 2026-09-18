@@ -130,6 +130,18 @@ class TitoSyncJobTest < ActiveJob::TestCase
     assert_equal 1, TitoSyncJob.status[:already]
   end
 
+  test "an attendee whose role was set by an admin is not auto-promoted, even matching a volunteer release" do
+    attendee = users(:attendee_one)
+    attendee.update!(role_set_by_admin: true)
+    attendee.update!(tito_ticket_slug: "already-linked-slug")
+    releases = [ FakeRelease.new(1, "Awesome Volunteer Ticket") ]
+    ticket = FakeTicket.new("already-linked-slug", attendee.email, attendee.first_name, attendee.last_name, 1)
+
+    with_fake_tito_client([ ticket ], releases: releases) { TitoSyncJob.perform_now }
+
+    assert attendee.reload.attendee?
+  end
+
   test "an existing volunteer or admin is never demoted, regardless of release" do
     volunteer = users(:volunteer_one)
     admin = users(:jeremy)

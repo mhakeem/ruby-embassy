@@ -41,12 +41,10 @@ class TitoSyncJob < ApplicationJob
       role = role_for(release_titles[ticket.release_id])
 
       if (user = slugs[ticket.slug])
-        # Only ever promote, never demote: a user already elevated (by hand,
-        # or by an earlier sync) keeps their role no matter what a later
-        # ticket's release says. This has to run here too, not just on
-        # connect/create below — most tickets hit this branch on every
-        # resync after the first, since they're already linked by slug.
-        user.update!(role: role) if user.attendee? && role != :attendee
+        # This has to run here too, not just on connect/create below — most
+        # tickets hit this branch on every resync after the first, since
+        # they're already linked by slug.
+        promote!(user, role)
         already += 1
       elsif (user = emails[ticket.email.to_s.downcase])
         user.update!(
@@ -54,7 +52,7 @@ class TitoSyncJob < ApplicationJob
           first_name: ticket.first_name,
           last_name: ticket.last_name
         )
-        user.update!(role: role) if user.attendee? && role != :attendee
+        promote!(user, role)
         connected += 1
       else
         User.create!(
@@ -87,6 +85,15 @@ class TitoSyncJob < ApplicationJob
   def role_for(release_title)
     _, role = ROLE_BY_RELEASE_TITLE.find { |pattern, _| release_title&.match?(pattern) }
     role || :attendee
+  end
+
+  # Promotes only — never demotes — and never touches a user whose role an
+  # admin has explicitly set, even if that's "attendee". Sync re-walks every
+  # ticket on every run with no since-last-sync filter, so this check runs
+  # on every single sync, not just the first time a ticket is seen.
+  def promote!(user, role)
+    return unless user.attendee? && role != :attendee && !user.role_set_by_admin?
+    user.update!(role: role)
   end
 
   def write_status(**attrs)

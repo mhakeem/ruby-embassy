@@ -2,6 +2,15 @@ class TitoSyncJob < ApplicationJob
   CACHE_KEY = "tito_sync:status"
   STALE_AFTER = 15.minutes
 
+  # Maps a Tito release title to the role a ticket-holder should get.
+  # Matched by title, not release_id — release ids are recreated every year,
+  # but a "Volunteer"-ish title is likely to persist. Falls back to :attendee
+  # for anything unmatched, so a brand-new release type next year is safe by
+  # default rather than erroring.
+  ROLE_BY_RELEASE_TITLE = {
+    /volunteer/i => :volunteer
+  }.freeze
+
   retry_on Tito::Error, wait: 30.seconds, attempts: 3 if defined?(Tito::Error)
 
   def self.status
@@ -21,6 +30,7 @@ class TitoSyncJob < ApplicationJob
     users = User.all.to_a
     slugs  = users.each_with_object({}) { |u, h| h[u.tito_ticket_slug] = u if u.tito_ticket_slug.present? }
     emails = users.each_with_object({}) { |u, h| (h[u.email.downcase] ||= u) if u.email.present? && u.tito_ticket_slug.blank? }
+    release_titles = fetch_release_titles
 
     already = 0
     connected = 0
@@ -28,7 +38,15 @@ class TitoSyncJob < ApplicationJob
     failed = 0
 
     User.tito_client.tickets.where(state: %w[complete]).each do |ticket|
-      if slugs[ticket.slug]
+      role = role_for(release_titles[ticket.release_id])
+
+      if (user = slugs[ticket.slug])
+        # Only ever promote, never demote: a user already elevated (by hand,
+        # or by an earlier sync) keeps their role no matter what a later
+        # ticket's release says. This has to run here too, not just on
+        # connect/create below — most tickets hit this branch on every
+        # resync after the first, since they're already linked by slug.
+        user.update!(role: role) if user.attendee? && role != :attendee
         already += 1
       elsif (user = emails[ticket.email.to_s.downcase])
         user.update!(
@@ -36,6 +54,7 @@ class TitoSyncJob < ApplicationJob
           first_name: ticket.first_name,
           last_name: ticket.last_name
         )
+        user.update!(role: role) if user.attendee? && role != :attendee
         connected += 1
       else
         User.create!(
@@ -43,7 +62,7 @@ class TitoSyncJob < ApplicationJob
           first_name: ticket.first_name,
           last_name: ticket.last_name,
           email: ticket.email,
-          role: :attendee
+          role: role
         )
         added += 1
       end
@@ -60,6 +79,15 @@ class TitoSyncJob < ApplicationJob
   end
 
   private
+
+  def fetch_release_titles
+    User.tito_client.releases.to_a.each_with_object({}) { |r, h| h[r.id] = r.title }
+  end
+
+  def role_for(release_title)
+    _, role = ROLE_BY_RELEASE_TITLE.find { |pattern, _| release_title&.match?(pattern) }
+    role || :attendee
+  end
 
   def write_status(**attrs)
     status = (Rails.cache.read(CACHE_KEY) || {}).merge(finished_at: Time.current, **attrs)

@@ -1,7 +1,8 @@
 require "test_helper"
 
 class TitoSyncJobTest < ActiveJob::TestCase
-  FakeTicket = Struct.new(:slug, :email, :first_name, :last_name)
+  FakeTicket = Struct.new(:slug, :email, :first_name, :last_name, :release_id)
+  FakeRelease = Struct.new(:id, :title)
 
   class FakeTicketsScope
     def initialize(tickets)
@@ -14,17 +15,22 @@ class TitoSyncJobTest < ActiveJob::TestCase
   end
 
   class FakeTitoClient
-    def initialize(tickets)
+    def initialize(tickets, releases)
       @tickets = tickets
+      @releases = releases
     end
 
     def tickets
       FakeTicketsScope.new(@tickets)
     end
+
+    def releases
+      @releases
+    end
   end
 
-  def with_fake_tito_client(tickets)
-    fake_client = FakeTitoClient.new(tickets)
+  def with_fake_tito_client(tickets, releases: [])
+    fake_client = FakeTitoClient.new(tickets, releases)
     User.define_singleton_method(:tito_client) { fake_client }
     yield
   ensure
@@ -75,6 +81,81 @@ class TitoSyncJobTest < ActiveJob::TestCase
     with_fake_tito_client([ ticket ]) { TitoSyncJob.perform_now }
 
     assert volunteer.reload.volunteer?
+  end
+
+  test "a new user's role is set from their ticket's release title" do
+    releases = [ FakeRelease.new(1, "Awesome Volunteer Ticket"), FakeRelease.new(2, "Standard Ticket") ]
+    tickets = [
+      FakeTicket.new("vol-slug", "newvol@example.com", "New", "Vol", 1),
+      FakeTicket.new("std-slug", "newstd@example.com", "New", "Std", 2)
+    ]
+
+    with_fake_tito_client(tickets, releases: releases) { TitoSyncJob.perform_now }
+
+    assert_equal "volunteer", User.find_by(email: "newvol@example.com").role
+    assert_equal "attendee", User.find_by(email: "newstd@example.com").role
+  end
+
+  test "matches release title case-insensitively and independent of exact wording" do
+    releases = [ FakeRelease.new(1, "VOLUNTEER (Crew)") ]
+    ticket = FakeTicket.new("vol-slug", "crew@example.com", "Crew", "One", 1)
+
+    with_fake_tito_client([ ticket ], releases: releases) { TitoSyncJob.perform_now }
+
+    assert_equal "volunteer", User.find_by(email: "crew@example.com").role
+  end
+
+  test "an existing attendee is promoted to volunteer when their release matches on re-sync, connecting by email" do
+    attendee = users(:attendee_one)
+    releases = [ FakeRelease.new(1, "Awesome Volunteer Ticket") ]
+    ticket = FakeTicket.new("vol-slug", attendee.email, attendee.first_name, attendee.last_name, 1)
+
+    with_fake_tito_client([ ticket ], releases: releases) { TitoSyncJob.perform_now }
+
+    assert attendee.reload.volunteer?
+  end
+
+  test "an existing attendee already linked by slug is still promoted on a later re-sync" do
+    # The most common real-world path: someone was already synced once (so
+    # they're linked by tito_ticket_slug, not connected fresh by email), and
+    # a later re-sync is what's supposed to notice their volunteer release.
+    attendee = users(:attendee_one)
+    attendee.update!(tito_ticket_slug: "already-linked-slug")
+    releases = [ FakeRelease.new(1, "Awesome Volunteer Ticket") ]
+    ticket = FakeTicket.new("already-linked-slug", attendee.email, attendee.first_name, attendee.last_name, 1)
+
+    with_fake_tito_client([ ticket ], releases: releases) { TitoSyncJob.perform_now }
+
+    assert attendee.reload.volunteer?
+    assert_equal 1, TitoSyncJob.status[:already]
+  end
+
+  test "an existing volunteer or admin is never demoted, regardless of release" do
+    volunteer = users(:volunteer_one)
+    admin = users(:jeremy)
+    releases = [ FakeRelease.new(1, "Standard Ticket") ]
+    tickets = [
+      FakeTicket.new("vol-slug", volunteer.email, volunteer.first_name, volunteer.last_name, 1),
+      FakeTicket.new("admin-slug", admin.email, admin.first_name, admin.last_name, 1)
+    ]
+
+    with_fake_tito_client(tickets, releases: releases) { TitoSyncJob.perform_now }
+
+    assert volunteer.reload.volunteer?
+    assert admin.reload.admin?
+  end
+
+  test "unmatched or missing release titles default to attendee" do
+    releases = [ FakeRelease.new(1, "Scholarship") ]
+    tickets = [
+      FakeTicket.new("scholar-slug", "scholar@example.com", "Scholar", "One", 1),
+      FakeTicket.new("unknown-release-slug", "unknownrelease@example.com", "Unknown", "Release", 999)
+    ]
+
+    with_fake_tito_client(tickets, releases: releases) { TitoSyncJob.perform_now }
+
+    assert_equal "attendee", User.find_by(email: "scholar@example.com").role
+    assert_equal "attendee", User.find_by(email: "unknownrelease@example.com").role
   end
 
   test "a fatal error writes a failed status" do

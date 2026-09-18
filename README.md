@@ -96,7 +96,7 @@ either can be primary or backup, there's nothing structurally special about eith
 `MAIL_PROVIDER` and the matching provider's API key/token on Railway and redeploy; no code
 change needed either direction.
 
-The sender address (`MAIL_FROM_ADDRESS`, defaults to `noreply@rockymtnruby.dev`) is
+The sender address (`MAIL_FROM_ADDRESS`, defaults to the one hardcoded in the app) is
 independent of which provider is active. Whichever address you use must be verified with
 whichever provider is currently selected — an unverified sender gets rejected by that
 provider's API.

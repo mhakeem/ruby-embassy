@@ -2,16 +2,6 @@
 
 <%= turbo_stream_from "tito_sync" %>
 
-<div class="flex items-center justify-between mb-6 gap-3 flex-wrap">
-  <h1 class="text-2xl font-bold text-navy">Users</h1>
-  <div class="flex gap-3">
-    <%= button_to "Sync from Tito", sync_admin_users_path, method: :post, class: "btn btn-navy",
-          disabled: @sync_status && @sync_status[:state] == :running,
-          data: { turbo_submits_with: "Starting…" } %>
-    <%= link_to "Add user", new_admin_user_path, class: "btn btn-red" %>
-  </div>
-</div>
-
 <%= render "sync_status", status: @sync_status %>
 
 <%= form_with url: admin_users_path, method: :get, local: true, class: "mb-6 flex gap-2 flex-wrap" do %>
